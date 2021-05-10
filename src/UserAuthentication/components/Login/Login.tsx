@@ -1,4 +1,5 @@
 import React, { useCallback, useState } from 'react';
+import { Redirect, useHistory } from 'react-router';
 //Components
 import Label from '../../../Shared/components/Layout/Labels/Label';
 import Button from '../../../Shared/components/Layout/Buttons/Button';
@@ -12,7 +13,6 @@ import { useAppDispatch, useAppSelector } from '../../../Shared/store/hooks';
 import { LoginContainer, LoginFormContainer, LoginIllustration, LoginInput, RegisterLinkContainer } from './Login.styles';
 //Styles
 import { lightTheme } from '../../../Shared/components/Theme/constants/theme';
-import { Redirect } from 'react-router';
 
 const Login: React.FC = () => {
     //Hooks
@@ -22,6 +22,8 @@ const Login: React.FC = () => {
     const { loggedIn } = useAppSelector(state => state.user);
     //State
     const [credentials, setCredentials] = useState<Credentials>(initialCredentials);
+    //History
+    const history = useHistory();
 
     const submit = useCallback(() => {
         dispatch(loginAction(credentials));
@@ -35,8 +37,8 @@ const Login: React.FC = () => {
     }, [credentials]);
 
     const navigateToRegister = useCallback(() => {
-        console.log('Going to register')
-    }, []);
+        history.push('/register');
+    }, [history]);
 
     if(loggedIn)
         return <Redirect to = '/' />
@@ -112,7 +114,7 @@ const RegisterLink: React.FC<RegisterLinkProps> = ({ navigateToRegister }) => (
                 color = { lightTheme.primaryColor }
                 fontWeight = '500'
                 margin = '0 5px'
-                style = {{ marginTop: 'auto'}}
+                style = {{ marginTop: 'auto', cursor: 'pointer' }}
             >
                 Crear una
             </Label>

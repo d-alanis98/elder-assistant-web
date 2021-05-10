@@ -24,7 +24,7 @@ export const ImageSelectorOption = styled.div<ImageProps>`${({
     align-items: center;
     padding: 10px;
     text-align: center;
-    width: ${ getImageWidth(numberOfOptions) }px;
+    width: ${ getImageWidth(numberOfOptions) };
     height: auto;
     border: ${ selected 
         ? `${ selectedBorderWidth || 2 }px solid ${ selectedBorderColor || 'rgba(0,0,0,0.1)' }` 
@@ -47,4 +47,4 @@ export const ImageSelectorAsset = styled.img`
 
 
 
-const getImageWidth = (numberOfOptions:  number) => Math.floor(document.body.clientWidth / numberOfOptions) - 50;
+const getImageWidth = (numberOfOptions:  number) => `calc(${ Math.floor(100 / numberOfOptions) }% - 1rem)`;

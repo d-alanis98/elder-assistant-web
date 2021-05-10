@@ -10,6 +10,7 @@ interface LabelWithIconProps extends React.HTMLAttributes<HTMLLabelElement> {
     text?: string | React.ReactElement;
     color?: string;
     fontSize?: number | string;
+    className?: string;
 }
 
 
@@ -20,6 +21,7 @@ const LabelWithIcon: React.FC<LabelWithIconProps> = ({
     style,
     children,
     fontSize,
+    className,
 }) => (
     <LabelWithIconContainer>
         <LabelStyledIcon 
@@ -31,6 +33,7 @@ const LabelWithIcon: React.FC<LabelWithIconProps> = ({
             color = { color }
             style = { style }
             fontSize = { fontSize }
+            className = { className }
         >
             { text || children }    
         </Label>

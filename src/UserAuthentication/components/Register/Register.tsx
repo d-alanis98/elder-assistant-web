@@ -1,4 +1,5 @@
 import React, { useState, useCallback } from 'react';
+import { Redirect, useHistory } from 'react-router';
 //Components
 import Label from '../../../Shared/components/Layout/Labels/Label';
 import Button from '../../../Shared/components/Layout/Buttons/Button';
@@ -7,8 +8,11 @@ import PasswordInput from '../../../Shared/components/Layout/Input/PasswordInput
 import ImageSelector, { ImageSelectorOptionData } from '../../../Shared/components/Layout/Input/ImageSelector/ImageSelector';
 //Styled components
 import { RegisterInput, RegisterFormContainer } from './Register.styles';
+//Hooks
+import { useAppSelector } from '../../../Shared/store/hooks';
 //API
 import { register } from '../../infrastructure/userAuthenticationApi';
+
 
 
 
@@ -18,6 +22,10 @@ const Register: React.FC = () => {
      */
     //State
     const [userData, setUserData] = useState<UserData>(initialUserData);
+    //History
+    const history = useHistory();
+    //App state selector
+    const { loggedIn } = useAppSelector(state => state.user);
 
     /**
      * Functions
@@ -43,16 +51,20 @@ const Register: React.FC = () => {
              * @todo Reemplazar por createNotification del hook de notificaciones
              */
             alert(`Felicidades ${createdUser.name} ${createdUser.lastName}, la cuenta se ha creado con éxito. Ya puede iniciar sesión`);
+            history.push('/login');
         } catch(error) {
                         /**
              * @todo Reemplazar por createNotification del hook de notificaciones
              */
             alert(error.message);
         }
-    }, [userData]);
+    }, [userData, history]);
 
 
     const isValid = useCallback(() => validateData(userData), [userData]);
+
+    if(loggedIn)
+        return <Redirect to = '/' />
 
     return (
         <RegisterScrollContainer>

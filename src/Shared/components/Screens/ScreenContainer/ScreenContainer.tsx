@@ -31,15 +31,17 @@ const ScreenContainer: React.FC<Props> = ({
     }, [currentScreen, setCurrentScreen]);
 
     return (
-        <ScreenScrollContainer>
-            { 
+        <>
+            <ScreenScrollContainer>
+                { 
 
-                <ScreenContent 
-                    title = { section }
-                    children = { children }
-                />
-            }    
-        </ScreenScrollContainer>
+                    <ScreenContent 
+                        title = { section }
+                        children = { children }
+                    />
+                }    
+            </ScreenScrollContainer>
+        </>
     );
 }
 export default ScreenContainer;
@@ -52,7 +54,7 @@ interface ScreenTitleProps {
 
 const ScreenTitle: React.FC<ScreenTitleProps> = ({ title }) => title 
     ?  typeof title === 'string'
-        ? <Label style={{ textAlign: 'center'}}>{ title }</Label>
+        ? <Label fontSize='1.5rem' style={{ textAlign: 'center'}}>{ title }</Label>
         : title
     : null;
 

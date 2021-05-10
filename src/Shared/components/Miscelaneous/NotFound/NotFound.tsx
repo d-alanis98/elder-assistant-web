@@ -4,8 +4,9 @@ import styled from 'styled-components';
 import LabelWithIcon from '../../Layout/Labels/LabelWithIcon/LabelWithIcon';
 //Icons
 import { faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
-//Dimensions
+//Layout constants
 import { HEADER_HEIGHT } from '../../Header/Header.styles';
+import { layoutConstants } from '../../Layout/Layout';
 
 const NotFound: React.FC = () => (
     <NotFoundContainer>
@@ -22,7 +23,7 @@ const NotFound: React.FC = () => (
 export default NotFound;
 
 //Styled components
-const NotFoundContainer = styled.div`
+const NotFoundContainer = styled.div`${({ theme }) => `
     height: 100%;
     width: 100%;
     padding: 2rem;
@@ -30,17 +31,25 @@ const NotFoundContainer = styled.div`
     flex-grow: 1;
     align-items: center;
     justify-content: center;
-    background-color: #333;
-`;
+    background-color: ${ theme.backgroundColor };
+    margin: left: ${ HEADER_HEIGHT }px;
+
+    @media (max-width: ${ layoutConstants.breakPoints.lg }) {
+        margin-left: 0;
+        margin-bottom: ${ HEADER_HEIGHT }px;
+    }
+`}`;
 
 const NotFoundLabel = styled(LabelWithIcon).attrs(props => ({
     ...(props as Object),
     icon: faExclamationTriangle,
     text: 'No se encontró el recurso solicitado',
     color: props.theme.secondaryFontColor,
-    fontSize: '2rem',
+    fontSize: '1.8rem',
 }))`
-
+    @media (max-width: ${ layoutConstants.breakPoints.lg }) {
+        font-size: 1.5rem;
+    }
 `;
 
 const NotFoundIllustration = styled.img`
@@ -50,13 +59,20 @@ const NotFoundIllustration = styled.img`
     bottom: 0;
     right: 0;
     opacity: 0.8;
+    
+    @media (max-width: ${ layoutConstants.breakPoints.lg }) {
+        bottom: ${ HEADER_HEIGHT }px;
+    }
 `;
 
 const TopNotFoundIllustration = styled.img`
     height: clamp(150px, 100%, 200px);
     width: auto;
     position: absolute;
-    top: ${ HEADER_HEIGHT }px;
-    left: -2rem;
+    top: 0;
+    left: calc(${ HEADER_HEIGHT }px - 1.25rem);
     opacity: 0.75;
+    @media (max-width: ${ layoutConstants.breakPoints.lg }) {
+        left: -2rem;
+    }
 `

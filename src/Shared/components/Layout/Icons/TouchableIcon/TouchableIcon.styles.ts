@@ -5,13 +5,13 @@ import { TouchableIconProps } from './TouchableIcon';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'; 
 
 export const TouchableIconContainer = styled.div<TouchableIconProps>`
+    position: relative;
     display: flex;
     align-items: center;
     justify-content: center;
     width: auto;
     height: auto;
     padding: 3px;
-    margin-right: 5px;
 `
 
 export const StyledTouchableIcon = styled(FontAwesomeIcon)`${({ theme }) => `
@@ -24,7 +24,7 @@ export const TouchableIconBadgeContainer = styled.div<TouchableIconProps>`${({ t
     align-items: center;
     justify-content: center;
     flex-wrap: nowrap;
-    top: -3px;
+    top: -5px;
     right: ${ getRightPositionBasedOnBadgeText(badgeText) }px;
     background-color: ${ theme.alertColor };
     width: auto;
