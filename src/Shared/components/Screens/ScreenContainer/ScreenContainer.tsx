@@ -11,10 +11,12 @@ import useCurrentScreen from '../../Navigation/hooks/useCurrentScreen';
 
 interface Props extends React.HTMLAttributes<HTMLDivElement> {
     section?: string | React.ReactElement;
+    padding?: string;
 }
 
 const ScreenContainer: React.FC<Props> = ({ 
     section,
+    padding = '1rem',
     children,
 }) => {
     /**
@@ -31,17 +33,17 @@ const ScreenContainer: React.FC<Props> = ({
     }, [currentScreen, setCurrentScreen]);
 
     return (
-        <>
-            <ScreenScrollContainer>
-                { 
+        <ScreenScrollContainer
+            padding = { padding }
+        >
+            { 
 
-                    <ScreenContent 
-                        title = { section }
-                        children = { children }
-                    />
-                }    
-            </ScreenScrollContainer>
-        </>
+                <ScreenContent
+                    title = { section }
+                    children = { children }
+                />
+            }    
+        </ScreenScrollContainer>
     );
 }
 export default ScreenContainer;

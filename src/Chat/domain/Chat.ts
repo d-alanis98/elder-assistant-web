@@ -12,6 +12,6 @@ export interface ChatPrimitives {
     _id: string;
     name: string;
     ownedBy: string;
-    memebers: UserPrimitives[];
+    members: UserPrimitives[];
     createdAt: string;
 }

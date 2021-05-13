@@ -4,7 +4,7 @@ import { ThemeParameters } from '../../components/Theme/constants/ThemeParameter
 
 /**
  * @author Damián Alanís Ramírez
- * @version 1.1.1
+ * @version 1.2.1
  * @description Theme utils class.
  */
 export default class ThemeUtils {
@@ -35,6 +35,25 @@ export default class ThemeUtils {
             theme,
             `rgba(0,0,0,${ opacity || ThemeUtils.DEFAULT_OPACITY })`,
             `rgba(255,255,255,${ opacity || ThemeUtils.DEFAULT_OPACITY })`
+        )
+    );
+
+    /**
+     * Method to get an inverse translucid background color based on the theme.
+     * @param {ThemeParameters} theme The current theme
+     * @param {number} lightOpacity Opacity value for the light theme.
+     * @param {number} darkOpacity Opacity value for the dark theme.
+     * @returns 
+     */
+    static getThemedInverseTraslucidBackground = (
+        theme: ThemeParameters, 
+        lightOpacity?: number,
+        darkOpacity?: number
+    ) => (
+        ThemeUtils.getValueBasedOnTheme(
+            theme,
+            `rgba(255,255,255,${ lightOpacity || ThemeUtils.DEFAULT_OPACITY })`,
+            `rgba(0,0,0,${ darkOpacity || ThemeUtils.DEFAULT_OPACITY })`
         )
     );
     

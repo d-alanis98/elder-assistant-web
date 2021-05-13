@@ -13,9 +13,6 @@ const PrimaryUserScreen: React.FC = () => {
             <DeviceDataRenderer 
                 devices = { devices }
             />
-                        <DeviceDataRenderer 
-                devices = { devices }
-            />
         </PrimaryUserScreenContainer>
     )
 };

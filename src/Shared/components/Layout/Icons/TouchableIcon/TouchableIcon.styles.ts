@@ -12,6 +12,12 @@ export const TouchableIconContainer = styled.div<TouchableIconProps>`
     width: auto;
     height: auto;
     padding: 3px;
+    cursor: pointer;
+
+    &:hover {
+        opacity: 0.75;
+        transition: all 250ms;
+    }
 `
 
 export const StyledTouchableIcon = styled(FontAwesomeIcon)`${({ theme }) => `

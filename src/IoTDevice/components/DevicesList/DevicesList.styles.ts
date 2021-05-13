@@ -4,6 +4,8 @@ import TouchableIcon from '../../../Shared/components/Layout/Icons/TouchableIcon
 import ButtonWithIcon from '../../../Shared/components/Layout/Buttons/ButtonWithIcon/ButtonWithIcon';
 //Theme utils
 import ThemeUtils from '../../../Shared/utils/Theme/ThemeUtils';
+//Icons
+import { faCog, faRedo } from '@fortawesome/free-solid-svg-icons';
 
 export const DevicesListContainer = styled.div`
     display: flex;
@@ -42,24 +44,29 @@ export const DeviceName = styled.p`${({ theme }) => `
 
 export const DeviceSettings = styled(TouchableIcon).attrs(props => ({
     ...(props as Object),
-    icon: 'cog',
-    size: 24,
+    icon: faCog,
 }))`
     width: 40px;
+    font-size: 24px;
 `;
 
 
 export const DeviceRefreshButton = styled(TouchableIcon).attrs(props => ({
     ...(props as Object),
-    icon: 'redo',
-    size: 15
+    icon: faRedo,
 }))`${({ theme }) => `
     width: 30px;
     height: 30px;
-    padding: 5px;
+    padding: 0.5rem;
+    font-size: 16px;
     align-self: flex-end;
     background-color: ${ ThemeUtils.getThemedTranslucidBackground(theme) };
     border-radius: 20px;
     margin-right: 10px;
     margin-bottom: 10px;
+
+    &:hover {
+        box-shadow: 1px 1px 5px ${ ThemeUtils.getThemedTranslucidBackground(theme, 0.25) };
+        transition: all 300ms;
+    }
 `}`;

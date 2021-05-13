@@ -23,12 +23,17 @@ export const HeaderContainer = styled.nav`${({ theme }) => `
         margin-bottom: 0.75rem;
     }
 
+    @media (min-width: ${ layoutConstants.breakPoints.lg}) {
+        top: 0;
+    }
+
     @media (max-width: ${ layoutConstants.breakPoints.lg }) {
         z-index: 999;
         position: fixed;
         bottom: 0;
         left: 0;
         right: 0;
+
         height: ${ HEADER_HEIGHT }px;
         flex-direction: row;
         width: 100%;

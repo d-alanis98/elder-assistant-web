@@ -7,6 +7,8 @@ import WidgetDataRenderer from './WidgetDataRenderer/WidgetDataRenderer';
 import { IoTDevicePrimitives } from '../../../IoTDevice/domain/IoTDevice';
 //Hooks
 import useDeviceData from '../../../Shared/store/hooks/deviceData/useDeviceData';
+//Helpers
+import ObjectHelper from '../../../Shared/utils/Miscelaneous/ObjectHelper';
 
 interface DeviceDataRendererProps {
     devices: IoTDevicePrimitives[];
@@ -20,11 +22,15 @@ const DeviceDataRenderer: React.FC<DeviceDataRendererProps> = ({
      */
     //Device data
     const { lastData, getLastDeviceData } = useDeviceData();
+    //State
     const [fetching, setFetching] = React.useState(false)
 
     //Effects
     useEffect(() => {
-        setFetching(true)
+        setFetching(ObjectHelper.isEmpty(lastData));
+    }, [lastData]);
+
+    useEffect(() => {
         if(!devices || devices.length === 0)
             return;
         //We retrieve the last data for each device
@@ -40,7 +46,7 @@ const DeviceDataRenderer: React.FC<DeviceDataRendererProps> = ({
 
     if(
         devices.length === 0 || 
-        Object.keys(lastData).length === 0
+        ObjectHelper.isEmpty(lastData)
     )
         return <EmptyData />
 

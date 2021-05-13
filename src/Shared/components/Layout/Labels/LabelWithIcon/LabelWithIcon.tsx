@@ -23,7 +23,9 @@ const LabelWithIcon: React.FC<LabelWithIconProps> = ({
     fontSize,
     className,
 }) => (
-    <LabelWithIconContainer>
+    <LabelWithIconContainer
+        className = { className }
+    >
         <LabelStyledIcon 
             icon = { icon }
             fontSize = { fontSize }
@@ -33,7 +35,6 @@ const LabelWithIcon: React.FC<LabelWithIconProps> = ({
             color = { color }
             style = { style }
             fontSize = { fontSize }
-            className = { className }
         >
             { text || children }    
         </Label>

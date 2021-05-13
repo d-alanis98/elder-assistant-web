@@ -5,9 +5,17 @@ import Label, { LabelProps } from '../../../../Shared/components/Layout/Labels/L
 //Theme
 import ThemeUtils from '../../../../Shared/utils/Theme/ThemeUtils';
 
-export const ChatListItemContainer = styled.div`${({ theme }) => `
+interface ContainerProps {
+    selected?: boolean;
+}
+
+export const ChatListItemContainer = styled.div<ContainerProps>`${({ 
+    theme,
+    selected 
+}) => `
     width: 100%;
     height: 80px;
+    cursor: pointer;
     display: flex;
     padding: 10px;
     margin-bottom: 10px;
@@ -15,6 +23,16 @@ export const ChatListItemContainer = styled.div`${({ theme }) => `
     align-items: center;
     border-radius: 15px;
     background-color: ${ ThemeUtils.getThemedTranslucidBackground(theme) };
+    opacity: ${ selected ? 0.85 : 1 };
+    box-shadow: ${ selected
+        ? `1px 1px 7px ${ ThemeUtils.getThemedTranslucidBackground(theme, 0.35) }`
+        : 'none'
+    };
+    &:hover {
+        box-shadow: 2px 1px 10px rgba(0,0,0,0.15);
+        opacity: 0.75;
+        transition: all 300ms;
+    }
 `}`;
 
 
@@ -38,6 +56,7 @@ export const ChatListItemName = styled(Label)
 }))<ChatNameProps>`
     opacity: 0.8;
     margin-left: 10px;
+    cursor: pointer;
 `;
 
 

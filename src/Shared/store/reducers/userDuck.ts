@@ -32,6 +32,7 @@ const TOKEN_KEY         = 'TOKEN';
 const REFRESH_TOKEN_KEY = 'REFRESH_TOKEN';
 //Initial state
 interface UserState extends UserData {
+    _id: string;
     name: string;
     type: ValidUserTypes;
     error?: string;
@@ -43,6 +44,7 @@ interface UserState extends UserData {
 };
 
 const initialState: UserState = {
+    _id: '',
     name: '',
     type: ValidUserTypes.SECONDARY,
     token: '',

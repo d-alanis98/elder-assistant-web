@@ -14,12 +14,19 @@ import {
 
 interface ChatListItemProps {
     chat: ChatPrimitives;
+    onClick: () => void;
+    selected?: boolean;
 }
 
 const ChatListItem: React.FC<ChatListItemProps> = ({
-    chat
+    chat,
+    onClick,
+    selected
 }) => (
-    <ChatListItemContainer>
+    <ChatListItemContainer
+        onClick = { onClick }
+        selected = { selected }
+    >
         <Avatar 
             size = { 50 }
         />

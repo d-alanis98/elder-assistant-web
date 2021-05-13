@@ -14,6 +14,7 @@ const IoTDeviceScreen: React.FC = () => {
     return (
         <ScreenContainer
             section = 'Dispositivos'
+            padding = '1rem'
         >
             <LinkDeviceButton 
                 icon = { faQrcode }

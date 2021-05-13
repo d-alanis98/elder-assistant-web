@@ -46,7 +46,8 @@ export default EmptyData;
 const defaultStyles = (opacity: number) => ({
     container: {
         opacity,
-        alignSelf: 'center',
-        marginTop: document.body.clientHeight / 3
+        height: '100%',
+        alignItems: 'center',
+        justifyContent:'center'
     }
 });

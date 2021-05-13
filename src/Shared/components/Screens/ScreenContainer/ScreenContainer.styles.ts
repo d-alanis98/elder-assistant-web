@@ -3,17 +3,24 @@ import styled from 'styled-components';
 import { HEADER_HEIGHT } from '../../Header/Header.styles';
 import { layoutConstants } from '../../Layout/Layout';
 
-export const ScreenScrollContainer = styled.div`${({ theme }) => `
-    flex-grow: 1;
+interface ScreenScrollContainerProps {
+    padding?: string;
+}
+
+export const ScreenScrollContainer = styled.div<ScreenScrollContainerProps>`${({ 
+    theme,
+    padding 
+}) => `
+    position: relative;
+    height: 100%;
     display: flex;
-    padding: 1rem;
     margin-left: ${ HEADER_HEIGHT }px;
     flex-direction: column;
-    overflow-y: auto;
     background-color: ${ theme.backgroundColor };
-
+    padding: ${ padding || '0' };
     @media (max-width: ${ layoutConstants.breakPoints.lg }) {
         margin-left: 0;
         margin-bottom: ${ HEADER_HEIGHT }px;
+        padding-bottom: ${ HEADER_HEIGHT }px;
     }
 `}`;
