@@ -22,24 +22,22 @@ interface ChatConversationProps {
 const ChatConversation: React.FC<ChatConversationProps> = ({
     selectedChat,
     setSelectedChat
-}) => {
-    return (
-        <ChatConversationContainer>
-            <ChatConversationHeaderRenderer 
-                selectedChat = { selectedChat }
-                setSelectedChat = { setSelectedChat }
-            />
-            <ChatConversationScrollContainer>
-                <ChatConversationMainAreaRenderer 
-                    selectedChat = { selectedChat }
-                />
-            </ChatConversationScrollContainer>
-            <ChatActionsRenderer 
+}) => (
+    <ChatConversationContainer>
+        <ChatConversationHeaderRenderer 
+            selectedChat = { selectedChat }
+            setSelectedChat = { setSelectedChat }
+        />
+        <ChatConversationScrollContainer>
+            <ChatConversationMainAreaRenderer 
                 selectedChat = { selectedChat }
             />
-        </ChatConversationContainer>
-    );
-}
+        </ChatConversationScrollContainer>
+        <ChatActionsRenderer 
+            selectedChat = { selectedChat }
+        />
+    </ChatConversationContainer>
+);
 
 export default ChatConversation;
 

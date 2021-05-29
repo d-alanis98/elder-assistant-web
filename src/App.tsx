@@ -1,12 +1,15 @@
 import React, { useEffect } from 'react'
 import { ThemeProvider } from 'styled-components';
+//Domain
+import OnUpdatedAuthToken from './UserAuthentication/domain/event-handlers/OnUpdatedAuthToken';
 //Components
 import Routes from './Shared/components/Routes/Routes';
 import RequestErrorHandler from './Shared/infrastructure/Errors/RequestErrorHandler';
 import AxiosRequest from './Shared/infrastructure/Requests/AxiosRequest';
 //Hooks
 import { useAppDispatch, useAppSelector } from './Shared/store/hooks';
-import OnUpdatedAuthToken from './UserAuthentication/domain/event-handlers/OnUpdatedAuthToken';
+//HOC
+import withWebSocketsContextProvider from './Shared/utils/WebSockets/context/HOC/withWebSocketsContextProvider';
 
 const App: React.FC = () => {
     /**
@@ -47,4 +50,7 @@ const App: React.FC = () => {
     );
 }
 
-export default App;
+//We apply the web socket context provider decorator
+const WithWebSocketContextProvider = withWebSocketsContextProvider(App);
+//We export the decorated component
+export default WithWebSocketContextProvider;

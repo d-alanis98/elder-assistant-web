@@ -28,7 +28,11 @@ const ChatActions: React.FC<ChatActionsProps> = ({
     const sendMessage = useCallback(() => {
         console.log(`Sending message ${ message } to chat ${ selectedChat._id }`);
         clearMessage();
-    }, [message, clearMessage]);
+    }, [
+        message, 
+        selectedChat,
+        clearMessage
+    ]);
 
 
     return (

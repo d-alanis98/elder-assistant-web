@@ -55,16 +55,12 @@ export const DeviceDataWidgetTitleContainer = styled.div`
     margin-bottom: 5px;
 `;
 
-interface DeviceDataWidgetIconProps {
-    iconSize?: number;
-}
 
-export const DeviceDataWidgetTitleIcon = styled(FontAwesomeIcon)<DeviceDataWidgetIconProps>`${({ 
-    theme,
-    iconSize 
+export const DeviceDataWidgetTitleIcon = styled(FontAwesomeIcon)`${({ 
+    theme
 }) => `
     color: ${ isDarkTheme(theme) ? theme.fontColor : '#777' };
-    font-size: ${ iconSize || DEFAULT_ICON_SIZE }px;
+    font-size: ${ DEFAULT_ICON_SIZE }px;
 `}`;
 
 

@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 //Components
 import LoadingText from '../../../../Shared/components/Loaders/LoadingText';
 import ChatMessage from '../../../../ChatMessage/components/ChatMessage/ChatMessage';
@@ -7,6 +7,10 @@ import { ChatContentContainer } from './ChatContent.styles';
 //Hooks
 import useChatMessages from '../../../../Shared/store/hooks/chats/useChatMessages';
 import { useAppSelector } from '../../../../Shared/store/hooks';
+import useWebSocketMessage from '../../../../Shared/utils/WebSockets/hooks/useWebSocketMessage';
+
+//Constants
+const CHAT_CONVERSATION_CONTAINER = 'chat-conversation-container';
 
 interface ChatContentProps {
     chatId: string;
@@ -14,7 +18,9 @@ interface ChatContentProps {
 const ChatContent: React.FC<ChatContentProps> = ({
     chatId
 }) => (
-    <ChatContentContainer>
+    <ChatContentContainer
+        id = { CHAT_CONVERSATION_CONTAINER }
+    >
         <ChatContentBody 
             chatId = { chatId }
         />
@@ -34,7 +40,16 @@ const ChatContentBody: React.FC<ChatContentProps> = ({
     const { _id: userId } = useAppSelector(state => state.user);
     //Chat messages
     const { messages, fetching, getChatUserData } = useChatMessages(chatId);
-
+    //Web socket message hook
+    useWebSocketMessage((message) => {
+        setChatMessages(prevChatMessages => {
+            let messagesCopy = [...prevChatMessages];
+            messagesCopy.unshift(message);
+            return messagesCopy;
+        });
+    }, 'ChatMessage');
+    //Local state
+    const [chatMessages, setChatMessages] = useState(messages);
     //Callbacks
     const isLoading = useCallback(() => (
         fetching && messages.length === 0
@@ -54,6 +69,28 @@ const ChatContentBody: React.FC<ChatContentProps> = ({
         senderId === userId
     ), [ userId ]);
 
+    const scrollToBottom = useCallback(() => {
+        const conversationContainer = document.querySelector(`#${ CHAT_CONVERSATION_CONTAINER }`);
+        conversationContainer?.scrollBy({
+            top: conversationContainer.scrollHeight,
+            behavior: 'smooth'
+        });
+    }, []);
+
+    //Effect
+    useEffect(() => {
+        if(!messages)
+            return;
+        setChatMessages(messages);
+    }, [messages]);
+
+    useEffect(() => {
+        scrollToBottom();
+    }, [
+        chatMessages,
+        scrollToBottom
+    ]);
+
     return (
         <>
             {
@@ -61,7 +98,7 @@ const ChatContentBody: React.FC<ChatContentProps> = ({
                     ? <LoadingText 
                         text = 'Obteniendo mensajes...'
                     />
-                    : messages.map(message => (
+                    : chatMessages.map(message => (
                         <ChatMessage 
                             key = { message._id }
                             issuedAt = { message.issuedAt }

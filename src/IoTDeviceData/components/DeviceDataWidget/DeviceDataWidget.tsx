@@ -13,7 +13,6 @@ export interface DeviceDataWidgetProps extends React.HTMLAttributes<HTMLDivEleme
     width?: number | string;
     height?: number | string;
     fontSize?: number;
-    iconSize?: number;
     fontWeight?: string;
     widgetTitle?: string;
     borderRadius?: number;
@@ -27,7 +26,6 @@ const DeviceDataWidget: React.FC<DeviceDataWidgetProps> = ({
     height,
     children,
     fontSize,
-    iconSize,
     fontWeight,
     widgetTitle,
     borderRadius,
@@ -45,7 +43,6 @@ const DeviceDataWidget: React.FC<DeviceDataWidgetProps> = ({
             <DeviceDataWidgetTitleContainer>
                 <DeviceDataWidgetTitleIcon 
                     icon = { icon || faMicrochip }
-                    iconSize = { iconSize }
                 />
                 <DeviceDataWidgetTitleText
                     fontSize = { fontSize }
