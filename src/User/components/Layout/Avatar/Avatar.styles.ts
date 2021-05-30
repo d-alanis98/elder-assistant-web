@@ -35,6 +35,16 @@ export const AvatarImage = styled.img<AvatarImageProps>`${({ size, resizeImage }
     resize-mode: ${ resizeImage ? 'contain' : 'cover'};
 `}`;
 
+export const AvatarNameContainer = styled.span`${({ theme }) => `
+    font-size: 0.9rem;
+    color: ${ theme.fontColor };
+    opacity: 0.5;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+`}`;
+
 const getImageDimensions = (size?: number) => size ? size - 5: 25;
 
 export const getAvatarSize = (size?: number) => size || 30;

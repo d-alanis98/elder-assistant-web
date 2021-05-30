@@ -130,6 +130,28 @@ export let getLastDeviceDataWithLoaderAction = (deviceId: string): ThunkAppActio
     getLastDeviceDataAction(deviceId)(dispatch, getState, null);
 }
 
+/**
+ * Method to update a last device data entry in the dictionary with received data
+ * (from WebSockets).
+ * @param {IoTDeviceDataPrimitives} deviceData Device data record to update.
+ * @returns 
+ */
+export let updateLastDeviceDataAction = (deviceData: IoTDeviceDataPrimitives): ThunkAppAction => (dispatch, getState) => {
+    //We get the current last device data dictionary
+    const { lastData: deviceLastData } = { ...getState().deviceData }; 
+    //We update the record
+    updateLastDataDictionaryEntry(
+        deviceData.deviceId,
+        deviceData,
+        deviceLastData
+    );
+    //We dispatch the GET_DEVICE_DATA_SUCCESS action with the device last data dictionary as payload
+    dispatch({
+        type: GET_DEVICE_DATA_SUCCESS,
+        payload: deviceLastData
+    });
+}
+
 
 /**
  * Helpers
@@ -169,14 +191,27 @@ const getDeviceLastDataDictionary = (
         //We validate the data existance
         if(!deviceData)
             return;
-        //We create the empty object for the device id key if it does not exist
-        if(!deviceLastData[deviceId])
-            deviceLastData[deviceId] = {};
-        //We append the data to the dictionary
-        deviceLastData[deviceId][deviceData.key] = deviceData;
+        //We update the dictionary record
+        updateLastDataDictionaryEntry(
+            deviceId,
+            deviceData,
+            deviceLastData
+        );
     });
     //We return the final dictionary
     return deviceLastData;
+}
+
+const updateLastDataDictionaryEntry = (
+    deviceId: string,
+    deviceData: IoTDeviceDataPrimitives,
+    deviceLastData: LastDataDictionary
+) => {
+    //We create the empty object for the device id key if it does not exist
+    if(!deviceLastData[deviceId])
+        deviceLastData[deviceId] = { };
+    //We append the data to the dictionary
+    deviceLastData[deviceId][deviceData.key] = deviceData;
 }
 
 //Types

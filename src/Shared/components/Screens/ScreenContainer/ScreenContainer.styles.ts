@@ -12,7 +12,7 @@ export const ScreenScrollContainer = styled.div<ScreenScrollContainerProps>`${({
     padding 
 }) => `
     position: relative;
-    height: 100%;
+    min-height: 100vh;
     display: flex;
     margin-left: ${ HEADER_HEIGHT }px;
     flex-direction: column;

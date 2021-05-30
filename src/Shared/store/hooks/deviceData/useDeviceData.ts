@@ -1,8 +1,13 @@
 import { useEffect, useCallback } from 'react'
 //Hooks
 import { useAppDispatch, useAppSelector } from '..';
+import { IoTDeviceDataPrimitives } from '../../../../IoTDeviceData/domain/IoTDeviceData';
 //Actions
-import { getLastDeviceDataAction, getLastDeviceDataWithLoaderAction } from '../../reducers/deviceDataDuck';
+import { 
+    getLastDeviceDataAction, 
+    updateLastDeviceDataAction,
+    getLastDeviceDataWithLoaderAction 
+} from '../../reducers/deviceDataDuck';
 
 
 /**
@@ -30,10 +35,15 @@ const useDeviceData = (deviceId?: string) => {
         dispatch(getLastDeviceDataAction(deviceId))
     ), [dispatch]);
 
+    const updateLastDeviceData = useCallback((deviceData: IoTDeviceDataPrimitives) => {
+        dispatch(updateLastDeviceDataAction(deviceData));
+    }, [dispatch]);
+
     return {
         fetching,
         lastData,
-        getLastDeviceData
+        getLastDeviceData,
+        updateLastDeviceData
     }
 }
 

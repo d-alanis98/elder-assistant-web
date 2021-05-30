@@ -5,7 +5,7 @@ import AxiosRequest from '../../../Shared/infrastructure/Requests/AxiosRequest'
 
 /**
  * @author Damian Alanis Ramirez
- * @version 1.1.1
+ * @version 1.2.1
  * @description API facade for the ChatMessage entity.
  */
 
@@ -22,6 +22,26 @@ export const getChatMessages = async ({
         //We make the request to the endpoint providing the query parameters
         const response = await AxiosRequest.get(
             `/chat/${ chatId }/messages/?startingAt=${ startingAt }`
+        );
+        return response.data;
+    } catch(error) {
+        return Promise.reject(error);
+    }
+}
+
+interface PostTextMessage {
+    chatId: string;
+    content: string;
+}
+
+export const sendChatTextMessage = async ({
+    chatId,
+    content
+}: PostTextMessage) => {
+    try {
+        const response = await AxiosRequest.post(
+            `/chat/${ chatId }/message`,
+            { content }
         );
         return response.data;
     } catch(error) {

@@ -1,7 +1,8 @@
 import React from 'react';
+//Domain
+import { IoTDeviceDataPrimitives } from '../../../../domain/IoTDeviceData';
 //Components
-
-//Base widget
+import Map from '../../../../../Shared/components/Map/Map';
 import DeviceDataWidget, { BaseWidgetProps } from '../../../DeviceDataWidget/DeviceDataWidget';
 //Styled components
 import { LastLocationLabel, LastLocationLabelContainer, LastLocationTime } from './Location.styles';
@@ -18,19 +19,16 @@ const Location: React.FC<LocationProps> = ({
     event,
     eventData
 }) => {
+    
     return (
         <DeviceDataWidget
             icon = { faMapMarkerAlt }
             widgetTitle = 'Última ubicación'
         >
-            {/*
-            <Map 
-                lat = { eventData.lat }
-                lon = { eventData.lon }
-                height = { 300 }
-                scrollEnabled
-            />
-            */}
+            <LocationMap 
+                event = { event }
+                eventData = { eventData }
+            /> 
             <LastLocationLabelContainer>
                 <LastLocationLabel>
                     Última actualización: 
@@ -46,6 +44,28 @@ const Location: React.FC<LocationProps> = ({
 export default Location;
 
 
+//Internal components
+interface LocationMapProps {
+    event: IoTDeviceDataPrimitives;
+    eventData: LocationData;
+}
+
+const LocationMap: React.FC<LocationMapProps> = ({
+    event,
+    eventData
+}) => {
+    const { lat, lon: lng } = eventData;
+
+    //Render
+    return <Map 
+        zoom = { 15 }
+        center = {{ lat, lng }}
+        markers = {[{
+            id: event._id,
+            position: { lat, lng }
+        }]}
+    />
+};
 
 interface LocationData {
     lat: number;

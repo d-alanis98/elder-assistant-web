@@ -36,6 +36,7 @@ interface UserState extends UserData {
     name: string;
     type: ValidUserTypes;
     error?: string;
+    email: string;
     token: string;
     loading: boolean;
     loggedIn: boolean;
@@ -47,6 +48,7 @@ const initialState: UserState = {
     _id: '',
     name: '',
     type: ValidUserTypes.SECONDARY,
+    email: '',
     token: '',
     loading: false,
     loggedIn: false,

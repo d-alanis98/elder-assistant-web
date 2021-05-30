@@ -1,4 +1,5 @@
 import React, { useState, useCallback } from 'react';
+import { sendChatTextMessage } from '../../../../ChatMessage/infrastructure/api/chatMessagesApi';
 //Domain
 import { ChatPrimitives } from '../../../domain/Chat';
 //Styled components
@@ -25,21 +26,31 @@ const ChatActions: React.FC<ChatActionsProps> = ({
         setMessage('');
     }, [setMessage]);
 
-    const sendMessage = useCallback(() => {
-        console.log(`Sending message ${ message } to chat ${ selectedChat._id }`);
+    const sendMessage = useCallback(async () => {
+        await sendChatTextMessage({
+            chatId: selectedChat._id,
+            content: message
+        });
         clearMessage();
     }, [
         message, 
         selectedChat,
-        clearMessage
+        clearMessage,
     ]);
 
+    const handleKeyDown = useCallback((event: React.KeyboardEvent<HTMLTextAreaElement>) => {
+        console.log(event.key)
+        if(event.key !== 'Enter')
+            return;
+        sendMessage();
+    }, [sendMessage]);
 
     return (
         <ChatActionsContainer>
             <ChatActionsMessageInput 
                 value = { message }
                 onChange = { event => setMessage(event.target.value) }
+                onKeyDown = { handleKeyDown }
             />
             <ChatActionsMessageSendButton 
                 onClick = { sendMessage }

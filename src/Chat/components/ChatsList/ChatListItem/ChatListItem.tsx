@@ -29,6 +29,8 @@ const ChatListItem: React.FC<ChatListItemProps> = ({
     >
         <Avatar 
             size = { 50 }
+            userName = { chat.members[0]?.name }
+            userLastName = { chat.members[0]?.lastName }
         />
         <ChatListItemDescriptionContainer>
             <ChatListItemName 

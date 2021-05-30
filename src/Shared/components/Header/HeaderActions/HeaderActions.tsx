@@ -22,7 +22,7 @@ const HeaderActions: React.FC = () => {
     return (
         <HeaderActionsContainer>
             <HeaderItem
-                section = 'Rodolfo'
+                section = ''
             >
                 <Avatar 
                     size = { 40 }
@@ -41,7 +41,6 @@ const HeaderActions: React.FC = () => {
             <HeaderItem 
                 icon = { faComment }
                 section = 'Chat'
-                badgeText = '10'
                 onClick = { () => redirectToScreen('/chat') }
             />
             <HeaderItem 
@@ -52,7 +51,6 @@ const HeaderActions: React.FC = () => {
             <HeaderItem 
                 icon = { faBell }
                 section = 'Notificaciones'
-                badgeText = '99'
                 onClick = { () => redirectToScreen('/notifications') }
             />
         </HeaderActionsContainer>

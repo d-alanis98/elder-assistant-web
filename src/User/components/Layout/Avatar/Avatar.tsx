@@ -1,33 +1,59 @@
-import React from 'react';
+import React, { useCallback } from 'react';
+import { useAppSelector } from '../../../../Shared/store/hooks';
 //Styled components
-import { AvatarContainer, AvatarImage } from './Avatar.styles';
+import { AvatarContainer, AvatarNameContainer } from './Avatar.styles';
 
 export interface AvatarProps extends React.HTMLAttributes<HTMLDivElement> {
     size: number;
+    userName?: string;
     marginLeft?: number;
     marginRight?: number;
     resizeImage?: boolean;
+    userLastName?: string;
 }
 
 const Avatar: React.FC<AvatarProps> = ({ 
     size,
+    userName,
     marginLeft,
     marginRight,
     resizeImage = false,
+    userLastName,
     ...ownProps 
-}) => (
-    <AvatarContainer
-        size = { size }
-        marginLeft = { marginLeft }
-        marginRight = { marginRight }
-        { ...ownProps }
-    >
-        <AvatarImage 
-            size = { size }
-            src = 'https://lh3.googleusercontent.com/ogw/ADGmqu_cw1cb-p8jWvIdXx00alyC3r5RtAmPE4bkLHHBGg=s64-c-mo'
-            resizeImage = { resizeImage }
-        />
-    </AvatarContainer>
-);
+}) => {
+    /**
+     * Hooks
+     */
+    //State selector
+    const { 
+        name: { 0: stateNameInitial }, 
+        lastName: { 0: stateLastNameInitial } 
+    } = useAppSelector(state => state.user);
 
-export default Avatar;
+    //Callbacks
+    const getInitials = useCallback(() => {
+        if(!userName || !userLastName)
+            return `${ stateNameInitial }${ stateLastNameInitial }`;
+        return `${ userName[0] }${ userLastName[0] }` 
+    }, [
+        userName,
+        userLastName,
+        stateNameInitial,
+        stateLastNameInitial
+    ]);
+
+    return (
+        <AvatarContainer
+            size = { size }
+            marginLeft = { marginLeft }
+            marginRight = { marginRight }
+            { ...ownProps }
+        >
+            <AvatarNameContainer>
+                { getInitials() }
+            </AvatarNameContainer>
+        </AvatarContainer>
+    );
+}
+
+export default React.memo(Avatar);
