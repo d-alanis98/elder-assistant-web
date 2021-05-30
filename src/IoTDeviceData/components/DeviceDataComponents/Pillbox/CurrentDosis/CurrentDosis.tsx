@@ -82,6 +82,11 @@ const CurrentDosis: React.FC<CurrentDosisProps> = ({
                     activeSection = { currentDosis.section }
                 />
             </CurrentDosisContainer>
+            {
+                currentDosis.status === CurrentDosisStatus.PENDING
+                    ? <CompleteButton />
+                    : null
+            }
             <NextDosisContainer>
                 <NextDosisRow>
                     <NextDosisLabel>Próxima dosis: </NextDosisLabel>
