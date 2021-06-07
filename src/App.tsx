@@ -7,6 +7,7 @@ import Routes from './Shared/components/Routes/Routes';
 import RequestErrorHandler from './Shared/infrastructure/Errors/RequestErrorHandler';
 import AxiosRequest from './Shared/infrastructure/Requests/AxiosRequest';
 //Hooks
+import { useNotificationServices } from './Shared/components/Notifications/hooks/useNotificationServices';
 import { useAppDispatch, useAppSelector } from './Shared/store/hooks';
 //HOC
 import withWebSocketsContextProvider from './Shared/utils/WebSockets/context/HOC/withWebSocketsContextProvider';
@@ -40,7 +41,10 @@ const App: React.FC = () => {
         loggedIn, 
         refreshToken
     ]);
+    //We register the main services (mainly related to WebSockets messages)
+    useNotificationServices();
     
+    //Render
     return (
         <ThemeProvider
             theme = { themeToApply }

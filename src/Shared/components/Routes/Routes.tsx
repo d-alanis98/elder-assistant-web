@@ -15,7 +15,7 @@ import HomeScreen from '../../../User/components/HomeScreen/HomeScreen';
 import SettingsScreen from '../../../User/components/SettingsScreen/SettingsScreen';
 import ProtectedRoute from './ProtectedRoute';
 import IoTDeviceScreen from '../../../IoTDevice/components/IoTDeviceScreen/IoTDeviceScreen';
-import NotificationsScreen from '../../../User/components/NotificationsScreen/NotificationsScreen';
+import NotificationsScreen from '../../../Notifications/components/NotificationsScreen/NotificationsScreen';
 //Hooks
 import { useAppSelector } from '../../store/hooks';
 

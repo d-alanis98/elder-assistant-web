@@ -7,6 +7,7 @@ import chatReducer from './reducers/chatDuck';
 import themeReducer, { restoreThemeAction } from './reducers/themeDuck';
 import devicesReducer from './reducers/devicesDuck';
 import deviceDataReducer from './reducers/deviceDataDuck';
+import notificationsReducer, { restoreViewedNotificationsAction } from './reducers/notificationsDuck';
 
 const rootReducer = combineReducers({
     user: userReducer,
@@ -14,6 +15,7 @@ const rootReducer = combineReducers({
     theme: themeReducer,
     devices: devicesReducer, 
     deviceData: deviceDataReducer,
+    notifications: notificationsReducer
 });
 
 const generateStore = () => {
@@ -24,6 +26,7 @@ const generateStore = () => {
 
     restoreSessionAction()(store.dispatch, store.getState, undefined);
     restoreThemeAction()(store.dispatch, store.getState, null);
+    restoreViewedNotificationsAction()(store.dispatch, store.getState, null);
     return store;
 }
 

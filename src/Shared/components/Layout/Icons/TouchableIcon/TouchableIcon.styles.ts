@@ -20,9 +20,8 @@ export const TouchableIconContainer = styled.div<TouchableIconProps>`
     }
 `
 
-export const StyledTouchableIcon = styled(FontAwesomeIcon)`${({ theme }) => `
-    color: ${ theme.secondaryFontColor };
-`}`
+export const StyledTouchableIcon = styled(FontAwesomeIcon)`
+`;
 
 export const TouchableIconBadgeContainer = styled.div<TouchableIconProps>`${({ theme, badgeText }) => `
     position: absolute;

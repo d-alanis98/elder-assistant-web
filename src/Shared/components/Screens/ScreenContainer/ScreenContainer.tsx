@@ -1,10 +1,8 @@
-import React, { useContext, useEffect } from 'react';
+import React from 'react';
 //Components
 import Label from '../../Layout/Labels/Label';
 //Styled components
 import { ScreenScrollContainer } from './ScreenContainer.styles';
-//Context
-import CurrentScreenContext from '../context/CurrentScreenContext';
 //Hooks
 import useCurrentScreen from '../../Navigation/hooks/useCurrentScreen';
 
@@ -22,15 +20,8 @@ const ScreenContainer: React.FC<Props> = ({
     /**
      * Hooks
      */
-    //Current screen
-    const currentScreen = useCurrentScreen();
-    //Context consumer
-    const { setCurrentScreen } = useContext(CurrentScreenContext);
-    //Effects
-    useEffect(() => {
-        //We set the current screen at context level
-        setCurrentScreen?.(currentScreen);
-    }, [currentScreen, setCurrentScreen]);
+    //Current screen, we just invoke it to set the current screen at mount
+    useCurrentScreen();
 
     return (
         <ScreenScrollContainer

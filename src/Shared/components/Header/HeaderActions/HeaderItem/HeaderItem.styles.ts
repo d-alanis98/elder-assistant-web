@@ -7,6 +7,7 @@ import { layoutConstants } from '../../../Layout/Layout';
 import ThemeUtils from '../../../../utils/Theme/ThemeUtils';
 
 
+
 export const HeaderItemContainer = styled.li`
     display: flex;
     flex-direction: row;
@@ -22,7 +23,12 @@ export const HeaderItemContainer = styled.li`
     }
 `;
 
-export const HeaderItemIconContainer = styled.div`${({ theme }) => `
+interface HeaderItemContainerProps {
+    active: Boolean;
+}
+export const HeaderItemIconContainer = styled.div`${({ 
+    theme,
+}) => `
     display: flex;
     align-items: center;
     justify-content: center;
@@ -36,9 +42,12 @@ export const HeaderItemIconContainer = styled.div`${({ theme }) => `
     cursor: pointer;
 `}`;
 
-export const HeaderItemIcon = styled(TouchableIcon)`${({ theme }) => `
-    color: ${ theme.secondaryFontColor };
+export const HeaderItemIcon = styled(TouchableIcon)<HeaderItemContainerProps>`${({ 
+    theme,
+    active,
+}) => `
     cursor: pointer;
+    color: ${ active ? theme.primaryColor : theme.secondaryFontColor };
 `}`;
 
 interface HeaderItemLabelProps {

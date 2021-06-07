@@ -5,8 +5,6 @@ import NavigationItem from './NavigationItem';
 import PrimaryUserProtected from '../../Screens/PrimaryUserProtected';
 //Styled components
 import { NavigationContainer } from './Navigation.styles';
-//Context
-import CurrentScreenContext from '../../Screens/context/CurrentScreenContext';
 //Icons
 import { faCog, faComments, faHome, faMicrochip } from '@fortawesome/free-solid-svg-icons';
 
@@ -19,7 +17,6 @@ const Navigation: React.FC<NavigationProps> = ({ navigation }) => {
     /**
      * Hooks
      */
-    const { currentScreen } = useContext(CurrentScreenContext);
 
     /**
      * Method to navigate to the selected section.
@@ -28,20 +25,13 @@ const Navigation: React.FC<NavigationProps> = ({ navigation }) => {
     const handleNavigation = (section: string) => {
         navigation.navigate(section);
     }
-    /**
-     * Method to determine if the tab is active.
-     * @param {string} screenName The screen to which the tab indicator redirects.
-     */
-    const isActive = useCallback((screenName: string) => (
-        screenName === currentScreen
-    ), [currentScreen]);
 
     return (
         <IsLoggedIn>
             <NavigationContainer>
                 <NavigationItem 
                     icon = { faHome } 
-                    active = { isActive('Home') }
+                    active = { false }
                     section = 'Home'
                     onClick = { handleNavigation }
                     sectionLabel = 'Inicio'
@@ -50,7 +40,7 @@ const Navigation: React.FC<NavigationProps> = ({ navigation }) => {
                 <PrimaryUserProtected>
                     <NavigationItem 
                         icon = { faMicrochip }
-                        active = { isActive('Devices') }
+                        active = { false }
                         section = 'Devices'
                         onClick = { handleNavigation }
                         sectionLabel = 'Dispositivos'
@@ -59,7 +49,7 @@ const Navigation: React.FC<NavigationProps> = ({ navigation }) => {
                 </PrimaryUserProtected>
                 <NavigationItem 
                     icon = { faComments }
-                    active = { isActive('Chat') }
+                    active = { false }
                     section = 'Chat'
                     onClick = { handleNavigation }
                     sectionLabel = 'Chat'
@@ -67,7 +57,7 @@ const Navigation: React.FC<NavigationProps> = ({ navigation }) => {
                 />
                 <NavigationItem 
                     icon = { faCog }
-                    active = { isActive('Settings') }
+                    active = { false }
                     section = 'Settings'
                     onClick = { handleNavigation }
                     sectionLabel = 'Ajustes'

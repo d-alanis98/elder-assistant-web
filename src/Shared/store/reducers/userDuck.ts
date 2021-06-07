@@ -24,6 +24,7 @@ const LOGIN                 = 'LOGIN';
 const LOGOUT                = 'LOGOUT';
 const LOGIN_ERROR           = 'LOGIN_ERROR';
 const LOGIN_SUCCESS         = 'LOGIN_SUCCESS';
+const SET_CURRENT_SCREEN    = 'SET_CURRENT_SCREEN';
 const REFRESH_TOKEN_ERROR   = 'REFRESH_TOKEN_ERROR';
 const REFRESH_TOKEN_SUCCESS = 'REFRESH_TOKEN_SUCCESS';
 //Other constants
@@ -42,6 +43,7 @@ interface UserState extends UserData {
     loggedIn: boolean;
     lastName: string;
     dateOfBirth: string;
+    currentScreen: string;
 };
 
 const initialState: UserState = {
@@ -54,7 +56,8 @@ const initialState: UserState = {
     loggedIn: false,
     lastName: '',
     dateOfBirth: '',
-    refreshToken: ''
+    refreshToken: '',
+    currentScreen: ''
 };
 
 /**
@@ -86,6 +89,11 @@ const reducer = (state = initialState, action: AnyAction) => {
                 loading: false,
                 loggedIn: true,
             };
+        case SET_CURRENT_SCREEN:
+            return {
+                ...state,
+                currentScreen: payload
+            };
         case REFRESH_TOKEN_ERROR:
             return {
                 ...state,
@@ -115,7 +123,7 @@ export default reducer;
  * @param {FormData|Object} data The credentials object or form data.
  * @returns 
  */
-export let loginAction = (data: FormData | Object): ThunkAppAction<Promise<void>> => async dispatch => {
+export const loginAction = (data: FormData | Object): ThunkAppAction<Promise<void>> => async dispatch => {
     try {
         const { user, token, refreshToken } = await login(data);
         //We save the tokens in the storage
@@ -145,7 +153,7 @@ export let loginAction = (data: FormData | Object): ThunkAppAction<Promise<void>
  * LOGIN_SUCCESS action if it succeeds, otherwise it dispatchs the LOGIN_ERROR action with a custom exception SessionNotFound.
  * @returns 
  */
-export let restoreSessionAction = (): ThunkAppAction => async dispatch => {
+export const restoreSessionAction = (): ThunkAppAction => async dispatch => {
     try {
         //We get the data from the local storage
         const user = localStorage.getItem(USER_KEY);
@@ -178,7 +186,7 @@ export let restoreSessionAction = (): ThunkAppAction => async dispatch => {
  * @param {string} newToken The new authorization token.
  * @returns 
  */
-export let updateAuthTokenAction = (newToken: string): ThunkAppAction => async dispatch => {
+export const updateAuthTokenAction = (newToken: string): ThunkAppAction => async dispatch => {
     try {
         localStorage.setItem(TOKEN_KEY, newToken);
         //We dispatch the action with the new token as payload
@@ -199,7 +207,7 @@ export let updateAuthTokenAction = (newToken: string): ThunkAppAction => async d
  * Action to logout the user, clears the state and the storage.
  * @returns 
  */
-export let logoutAction = (): ThunkAppAction => dispatch => {
+export const logoutAction = (): ThunkAppAction => dispatch => {
     dispatch({
         type: LOGOUT,
     });
@@ -211,10 +219,24 @@ export let logoutAction = (): ThunkAppAction => dispatch => {
  * Action to logout the user with a session expired message.
  * @returns 
  */
-export let sessionExpiredAction = (): ThunkAppAction => (dispatch, getState) => {
+export const sessionExpiredAction = (): ThunkAppAction => (dispatch, getState) => {
     logoutAction()(dispatch, getState, null);
     //Create notification actio (session expired)
 } 
+
+/**
+ * Action to set the current screen.
+ * @param {string} currentScreen Current screen.
+ * @returns 
+ */
+export const setCurrentScreenAction = (
+    currentScreen: string
+): ThunkAppAction => (dispatch, _) => {
+    dispatch({
+        type: SET_CURRENT_SCREEN,
+        payload: currentScreen
+    });
+}
 
 /**
  * Helpers

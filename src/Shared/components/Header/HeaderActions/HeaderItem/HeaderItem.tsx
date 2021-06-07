@@ -7,14 +7,16 @@ import { faUser } from '@fortawesome/free-solid-svg-icons';
 
 interface HeaderItemProps {
     icon?: IconDefinition;
+    active: Boolean;
     section: string;
     display?: boolean;
     onClick?: React.MouseEventHandler<HTMLLIElement>;
-    badgeText?: string;
+    badgeText?: string | number;
 }
 
 const HeaderItem: React.FC<HeaderItemProps> = ({
     icon,
+    active,
     section,
     display,
     onClick,
@@ -27,16 +29,15 @@ const HeaderItem: React.FC<HeaderItemProps> = ({
             onClick = { onClick }
         >
             { 
-                children
-                    ? children
-                    : (
-                        <HeaderItemIconContainer>
-                            <HeaderItemIcon 
-                                icon = { icon || faUser }
-                                badgeText = { badgeText }
-                            />
-                        </HeaderItemIconContainer>
-                    )
+                children || (
+                    <HeaderItemIconContainer>
+                        <HeaderItemIcon 
+                            icon = { icon || faUser }
+                            active = { active }
+                            badgeText = { badgeText }
+                        />
+                    </HeaderItemIconContainer>
+                )
             }
             <HeaderItemLabel
                 display = { display }
