@@ -4,7 +4,7 @@ import { ThunkAppAction } from '../store';
 //Domain
 import { IoTDevicePrimitives } from '../../../IoTDevice/domain/IoTDevice';
 //API
-import { getDevicesData } from '../../../IoTDevice/infrastructure/api/devicesApi';
+import { getDevicesData, linkIoTDevice } from '../../../IoTDevice/infrastructure/api/devicesApi';
 
 /**
  * @author Damián Alanís Ramírez
@@ -129,4 +129,33 @@ export let getDeviceEventKeysAction = (deviceId: string): ThunkAppAction<string[
         return [];
     return device.eventKeys;
 
+}
+
+/**
+ * Action to request to link an IoT device to a primary user.
+ * @param {string} deviceId IoT device ID.
+ * @returns 
+ */
+export const linkIoTDeviceAction = (
+    deviceId: string
+): ThunkAppAction<Promise<IoTDevicePrimitives>> => async (dispatch, getState) => {
+    //We get the existing devices from state
+    const { devices: { devices } } = getState();
+    //We link the device via the API
+    try {
+        const linkedDevice = await linkIoTDevice(deviceId);
+        //We dispatch the updated devices
+        dispatch({
+            type: GET_DEVICES_SUCCESS,
+            payload: devices.concat(linkedDevice)
+        });
+        //We return the device data
+        return linkedDevice;
+    } catch(error) {
+        dispatch({
+            type: GET_DEVICES_ERROR,
+            payload: error.message
+        });
+        return Promise.reject(error);
+    }
 }

@@ -67,7 +67,7 @@ const ChatConversationMainAreaRenderer:  React.FC<ConversationProps> = ({
     selectedChat
 }) => selectedChat
     ? <ChatContent 
-        chatId = { selectedChat._id }
+        chat = { selectedChat }
     />
     : <ChatNotSelected />
 

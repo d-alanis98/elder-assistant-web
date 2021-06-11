@@ -1,4 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
+//Domain
+import { ChatPrimitives } from '../../../domain/Chat';
 //Components
 import LoadingText from '../../../../Shared/components/Loaders/LoadingText';
 import ChatMessage from '../../../../ChatMessage/components/ChatMessage/ChatMessage';
@@ -13,16 +15,16 @@ import useWebSocketMessage from '../../../../Shared/utils/WebSockets/hooks/useWe
 const CHAT_CONVERSATION_CONTAINER = 'chat-conversation-container';
 
 interface ChatContentProps {
-    chatId: string;
+    chat: ChatPrimitives;
 }
 const ChatContent: React.FC<ChatContentProps> = ({
-    chatId
+    chat
 }) => (
     <ChatContentContainer
         id = { CHAT_CONVERSATION_CONTAINER }
     >
         <ChatContentBody 
-            chatId = { chatId }
+            chat = { chat }
         />
     </ChatContentContainer>
 );
@@ -31,7 +33,7 @@ export default ChatContent;
 
 //Internal components
 const ChatContentBody: React.FC<ChatContentProps> = ({
-    chatId
+    chat
 }) => {
     /**
      * Hooks
@@ -39,7 +41,7 @@ const ChatContentBody: React.FC<ChatContentProps> = ({
     //State selector
     const { _id: userId } = useAppSelector(state => state.user);
     //Chat messages
-    const { messages, fetching, getChatUserData } = useChatMessages(chatId);
+    const { messages, fetching, getChatUserData } = useChatMessages(chat);
     //Web socket message hook
     useWebSocketMessage((message) => {
         setChatMessages(prevChatMessages => {
@@ -77,12 +79,10 @@ const ChatContentBody: React.FC<ChatContentProps> = ({
         });
     }, []);
 
-    //Effect
     useEffect(() => {
-        if(!messages)
-            return;
         setChatMessages(messages);
-    }, [messages]);
+    }, [messages])
+
 
     useEffect(() => {
         scrollToBottom();

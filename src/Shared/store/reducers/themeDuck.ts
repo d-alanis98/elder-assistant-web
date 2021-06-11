@@ -59,6 +59,8 @@ export let setThemeAction = (themeType: ValidThemes): ThunkAppAction => dispatch
             theme: themeToApply(themeType)
         }
     });
+    //We persist the theme preferences
+    setThemeInLocalStorage(themeType);
 } 
 
 /**
@@ -71,9 +73,6 @@ export let toggleThemeAction = (): ThunkAppAction => (dispatch, getState) => {
     const themeType = type === ValidThemes.LIGHT_THEME 
     ? ValidThemes.DARK_THEME 
     : ValidThemes.LIGHT_THEME;
-
-    //We persist the theme preferences
-    setThemeInLocalStorage(themeType);
     //We dispatch the set theme action
     setThemeAction(themeType)(dispatch, getState, null);
 }

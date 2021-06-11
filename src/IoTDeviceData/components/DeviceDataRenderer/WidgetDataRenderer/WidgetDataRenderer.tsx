@@ -37,26 +37,22 @@ const WidgetDataRenderer: React.FC<WidgetDataRendererProps> = ({
     useWebSocketMessage((deviceData: IoTDeviceDataPrimitives) => {
         updateLastDeviceData(deviceData);
     }, 'IoTDeviceData');
-
-    /**
-     * Todo, devolver la funcion getEventTypeWidget en el map, en lugar del DeviceDataWidget.
-     * Dicha función buscará el componente a renderizar en el diccionario de componentes por eventKey ()
-     */
+    
     return (
         <>
             {
                 Object.entries(deviceLastData)
                     .map(([eventKey, value]) => (
-                    getWidgetComponent({
-                        key: value._id,
-                        event: value,
-                        device,
-                        eventKey,
-                        eventData: value.value,
-                        deviceType: device.type,
-                    })
-                ))
-
+                        getWidgetComponent({
+                            key: value._id,
+                            event: value,
+                            device,
+                            eventKey,
+                            eventData: value.value,
+                            deviceType: device.type,
+                        })
+                    )
+                )
             }
         </>
     )

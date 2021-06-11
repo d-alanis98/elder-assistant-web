@@ -1,27 +1,32 @@
-import React, { useState } from 'react';
+import React from 'react';
 //Components
 import DevicesList from '../DevicesList/DevicesList';
 import ScreenContainer from '../../../Shared/components/Screens/ScreenContainer/ScreenContainer';
+import LinkDeviceModal from '../LinkDeviceModal/LinkDeviceModal';
 //Styled components
 import { LinkDeviceButton } from '../DevicesList/DevicesList.styles';
-//Icons
-import { faQrcode } from '@fortawesome/free-solid-svg-icons';
+//Hooks
+import useModal from '../../../Shared/store/hooks/modal/useModal';
 
 
 const IoTDeviceScreen: React.FC = () => {
-    const [showLinkModal, setShowLinkModal] = useState(false);
+    /**
+     * Hooks
+     */
+    //Modal
+    const { showModal } = useModal();
 
+    //Render
     return (
         <ScreenContainer
             section = 'Dispositivos'
             padding = '1rem'
         >
             <LinkDeviceButton 
-                icon = { faQrcode }
-                onClick = { () => setShowLinkModal(true) }
-                buttonText = 'Vincular dispositivo'
+                onClick = { showModal }
             />
             <DevicesList />
+            <LinkDeviceModal />
         </ScreenContainer>
     );
 }

@@ -7,6 +7,11 @@ import SessionNotFound from '../../../UserAuthentication/domain/exceptions/Sessi
 import { login } from '../../../UserAuthentication/infrastructure/userAuthenticationApi';
 //Thunk action base type
 import { ThunkAppAction } from '../store';
+//External actions
+import { hideModalAction } from './modalDuck';
+import { setThemeAction } from './themeDuck';
+//Constants
+import { ValidThemes } from '../../components/Theme/constants/ThemeParameters';
 
 /**
  * @author Damián Alanís Ramírez
@@ -207,11 +212,14 @@ export const updateAuthTokenAction = (newToken: string): ThunkAppAction => async
  * Action to logout the user, clears the state and the storage.
  * @returns 
  */
-export const logoutAction = (): ThunkAppAction => dispatch => {
+export const logoutAction = (): ThunkAppAction => (dispatch, getState) => {
     dispatch({
         type: LOGOUT,
     });
     clearStorage();
+    //We return to the defaults
+    hideModalAction()(dispatch, getState, undefined);
+    setThemeAction(ValidThemes.LIGHT_THEME)(dispatch, getState, undefined);
     //Create notification (logout)
 }
 

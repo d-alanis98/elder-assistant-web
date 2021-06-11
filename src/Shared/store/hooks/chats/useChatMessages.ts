@@ -1,10 +1,12 @@
 import { useEffect, useCallback } from 'react';
+//Domain
+import { ChatPrimitives } from '../../../../Chat/domain/Chat';
 //Hooks
 import { useAppDispatch, useAppSelector } from '..';
 //Actions
 import { getChatMessagesAction, getChatUserDataAction } from '../../reducers/chatDuck';
 
-const useChatMessages = (chatId: string) => {
+const useChatMessages = (chat: ChatPrimitives) => {
     /**
      * Hooks
      */
@@ -15,34 +17,34 @@ const useChatMessages = (chatId: string) => {
 
     //Effects
     useEffect(() => {
-        if(!chatId)
+        if(!chat || !chat._id)
             return;
         //We get the chat messages at mount
         dispatch(
-            getChatMessagesAction(chatId)
+            getChatMessagesAction(chat)
         );
     }, [
-        chatId,
+        chat,
         dispatch
     ]);
 
     //Callbacks
     const getChatMessages = useCallback((startingAt?: string) => {
-        dispatch(getChatMessagesAction(chatId, startingAt));
+        dispatch(getChatMessagesAction(chat, startingAt));
     }, [
-        chatId,
+        chat,
         dispatch
     ]);
 
     const getChatUserData = useCallback((userId: string) => (
-        dispatch(getChatUserDataAction(chatId, userId))
+        dispatch(getChatUserDataAction(chat._id, userId))
     ), [
-        chatId,
+        chat,
         dispatch
     ])
 
     return {
-        messages: messages[chatId] ? messages[chatId].messages : [],
+        messages: messages[chat._id] ? messages[chat._id].messages : [],
         fetching: fetchingMessages,
         getChatMessages,
         getChatUserData,

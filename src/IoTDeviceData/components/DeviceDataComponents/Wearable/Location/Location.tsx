@@ -1,6 +1,4 @@
 import React from 'react';
-//Domain
-import { IoTDeviceDataPrimitives } from '../../../../domain/IoTDeviceData';
 //Components
 import Map from '../../../../../Shared/components/Map/Map';
 import DeviceDataWidget, { BaseWidgetProps } from '../../../DeviceDataWidget/DeviceDataWidget';
@@ -19,14 +17,41 @@ const Location: React.FC<LocationProps> = ({
     event,
     eventData
 }) => {
-    
+    /**
+     * Hooks
+     */
+    //State
+    const [lastUpdate, setLastUpdate] = React.useState<string | null>(null);
+
+    //Callbacks
+    const updateDateDifference = React.useCallback(() => {
+        setLastUpdate(
+            DateHelper
+                .getDateDifferenceFromIsoString(event.issuedAt)
+        );
+    }, [
+        event,
+        setLastUpdate
+    ]);
+
+    //Effects
+    React.useEffect(() => {
+        updateDateDifference();
+        //We set the update interval
+        const interval = setInterval(
+            updateDateDifference, 
+            10_000
+        );
+        //Cleanup
+        return () => clearInterval(interval);
+    }, [updateDateDifference]);
+
     return (
         <DeviceDataWidget
             icon = { faMapMarkerAlt }
             widgetTitle = 'Última ubicación'
         >
             <LocationMap 
-                event = { event }
                 eventData = { eventData }
             /> 
             <LastLocationLabelContainer>
@@ -34,38 +59,30 @@ const Location: React.FC<LocationProps> = ({
                     Última actualización: 
                 </LastLocationLabel>
                 <LastLocationTime>
-                    { DateHelper.getDateDifferenceFromIsoString(event.issuedAt) }
+                    { lastUpdate }
                 </LastLocationTime>
             </LastLocationLabelContainer>
         </DeviceDataWidget>
     );
 }
 
-export default Location;
+export default React.memo(Location);
 
 
 //Internal components
 interface LocationMapProps {
-    event: IoTDeviceDataPrimitives;
     eventData: LocationData;
 }
 
 const LocationMap: React.FC<LocationMapProps> = ({
-    event,
-    eventData
-}) => {
-    const { lat, lon: lng } = eventData;
-
-    //Render
-    return <Map 
+    eventData: { lat, lon: lng }
+}) => (
+    <Map 
         zoom = { 15 }
         center = {{ lat, lng }}
-        markers = {[{
-            id: event._id,
-            position: { lat, lng }
-        }]}
+        marker = {{ lat, lng }}
     />
-};
+);
 
 interface LocationData {
     lat: number;

@@ -5,7 +5,7 @@ import ButtonWithIcon from '../../../Shared/components/Layout/Buttons/ButtonWith
 //Theme utils
 import ThemeUtils from '../../../Shared/utils/Theme/ThemeUtils';
 //Icons
-import { faCog, faRedo } from '@fortawesome/free-solid-svg-icons';
+import { faCog, faQrcode, faRedo } from '@fortawesome/free-solid-svg-icons';
 
 export const DevicesListContainer = styled.div`
     display: flex;
@@ -17,10 +17,23 @@ export const DevicesListContainer = styled.div`
     margin: 5px;
 `;
 
-export const LinkDeviceButton = styled(ButtonWithIcon)`
+export const LinkDeviceButton = styled(ButtonWithIcon)
+    .attrs(props => ({
+        ...(props as Object),
+        icon: faQrcode,
+        buttonText: 'Vincular dispositivo'
+    }))
+`${({ theme }) => `
     margin: 20px 0px;
     align-self: flex-end;
-`;
+    & * {
+        cursor: pointer
+    }
+    &:hover {
+        box-shadow: 1px 1px 5px ${ ThemeUtils.getThemedTranslucidBackground(theme, 0.25) };
+        transition: all 300ms;
+    }
+`}`;
 
 export const DevicesListItem = styled.div`${({ theme }) => `
     display: flex;
@@ -32,6 +45,11 @@ export const DevicesListItem = styled.div`${({ theme }) => `
     padding: 20px 10px;
     border-radius: 25px;
     margin-bottom: 10px;
+
+    &:hover {
+        box-shadow: 1px 1px 5px ${ ThemeUtils.getThemedTranslucidBackground(theme, 0.25) };
+        transition: all 300ms;
+    }
 `}`;
 
 export const DeviceName = styled.p`${({ theme }) => `
@@ -45,10 +63,11 @@ export const DeviceName = styled.p`${({ theme }) => `
 export const DeviceSettings = styled(TouchableIcon).attrs(props => ({
     ...(props as Object),
     icon: faCog,
-}))`
+}))`${({ theme }) => `
     width: 40px;
+    color: ${ theme.secondaryFontColor };
     font-size: 24px;
-`;
+`}`;
 
 
 export const DeviceRefreshButton = styled(TouchableIcon).attrs(props => ({
@@ -59,6 +78,7 @@ export const DeviceRefreshButton = styled(TouchableIcon).attrs(props => ({
     height: 30px;
     padding: 0.5rem;
     font-size: 16px;
+    color: ${ theme.secondaryFontColor };
     align-self: flex-end;
     background-color: ${ ThemeUtils.getThemedTranslucidBackground(theme) };
     border-radius: 20px;

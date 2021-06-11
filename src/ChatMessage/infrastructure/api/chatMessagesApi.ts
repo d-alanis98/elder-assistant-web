@@ -1,7 +1,8 @@
 //Domain
+import { ChatPrimitives } from '../../../Chat/domain/Chat';
 import { ChatMessagePrimitives } from '../../domain/ChatMessage';
 //Requests manager
-import AxiosRequest from '../../../Shared/infrastructure/Requests/AxiosRequest'
+import AxiosRequest from '../../../Shared/infrastructure/Requests/AxiosRequest';
 
 /**
  * @author Damian Alanis Ramirez
@@ -10,18 +11,18 @@ import AxiosRequest from '../../../Shared/infrastructure/Requests/AxiosRequest'
  */
 
 interface GetChatMessagesParameters {
-    chatId: string;
+    chat: ChatPrimitives;
     startingAt?: string;
 }
 
 export const getChatMessages = async ({
-    chatId,
+    chat,
     startingAt
 }: GetChatMessagesParameters): Promise<PaginatedChatMessages> => {
     try {
         //We make the request to the endpoint providing the query parameters
         const response = await AxiosRequest.get(
-            `/chat/${ chatId }/messages/?startingAt=${ startingAt }`
+            `/chat/${ chat._id }/messages/?startingAt=${ startingAt }&primaryUserId=${ chat.ownedBy }`
         );
         return response.data;
     } catch(error) {
@@ -30,18 +31,21 @@ export const getChatMessages = async ({
 }
 
 interface PostTextMessage {
-    chatId: string;
+    chat: ChatPrimitives;
     content: string;
 }
 
 export const sendChatTextMessage = async ({
-    chatId,
+    chat,
     content
 }: PostTextMessage) => {
     try {
         const response = await AxiosRequest.post(
-            `/chat/${ chatId }/message`,
-            { content }
+            `/chat/${ chat._id }/message`,
+            { 
+                content, 
+                primaryUserId: chat.ownedBy
+            }
         );
         return response.data;
     } catch(error) {

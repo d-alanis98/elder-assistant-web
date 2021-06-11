@@ -28,7 +28,7 @@ const ChatActions: React.FC<ChatActionsProps> = ({
 
     const sendMessage = useCallback(async () => {
         await sendChatTextMessage({
-            chatId: selectedChat._id,
+            chat: selectedChat,
             content: message
         });
         clearMessage();
@@ -39,7 +39,6 @@ const ChatActions: React.FC<ChatActionsProps> = ({
     ]);
 
     const handleKeyDown = useCallback((event: React.KeyboardEvent<HTMLTextAreaElement>) => {
-        console.log(event.key)
         if(event.key !== 'Enter')
             return;
         sendMessage();

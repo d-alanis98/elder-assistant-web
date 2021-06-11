@@ -131,14 +131,14 @@ export let getChatsAction = (): ThunkAppAction => async (dispatch, getState) => 
  * @param {string | undefined} startingAt Starting point, for pagination purposes.
  * @returns 
  */
-export let getChatMessagesAction = (chatId: string, startingAt?: string): ThunkAppAction => async (dispatch, getState) => {
+export let getChatMessagesAction = (chat: ChatPrimitives, startingAt?: string): ThunkAppAction => async (dispatch, getState) => {
     dispatch({
         type: GET_CHAT_MESSAGES,
     });
     try {
-        const chatMessagesRecords = await getChatMessages({ chatId, startingAt });
+        const chatMessagesRecords = await getChatMessages({ chat, startingAt });
         //We get the updated messages dictionary
-        const updatedDictionary = getMessagesDictionary(chatId, chatMessagesRecords, getState());
+        const updatedDictionary = getMessagesDictionary(chat._id, chatMessagesRecords, getState());
         //We dispatch the updated dictionary
         dispatch({
             type: GET_CHAT_MESSAGES_SUCCESS,

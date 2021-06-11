@@ -4,6 +4,7 @@ import { composeWithDevTools } from 'redux-devtools-extension';
 //Reducers
 import userReducer, { restoreSessionAction } from './reducers/userDuck';
 import chatReducer from './reducers/chatDuck';
+import modalReducer from './reducers/modalDuck';
 import themeReducer, { restoreThemeAction } from './reducers/themeDuck';
 import devicesReducer from './reducers/devicesDuck';
 import deviceDataReducer from './reducers/deviceDataDuck';
@@ -12,6 +13,7 @@ import notificationsReducer, { restoreViewedNotificationsAction } from './reduce
 const rootReducer = combineReducers({
     user: userReducer,
     chat: chatReducer,
+    modal: modalReducer,
     theme: themeReducer,
     devices: devicesReducer, 
     deviceData: deviceDataReducer,

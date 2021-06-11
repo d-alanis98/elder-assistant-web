@@ -5,7 +5,7 @@ import { IoTDevicePrimitives } from '../../domain/IoTDevice';
 import AxiosRequest from '../../../Shared/infrastructure/Requests/AxiosRequest';
 /**
  * @author Damián Alanís Ramírez
- * @version 1.1.1
+ * @version 1.2.1
  * @description Facade to access device API endpoints.
  */
 
@@ -14,11 +14,18 @@ export const getDevicesData = async (): Promise<IoTDevicePrimitives[]> => {
         const response = await AxiosRequest.get('/iot/devices');
         return response.data;
     } catch(error) {
-        console.log({ error })
         return Promise.reject(error);
     }
 }
 
+
+export const linkIoTDevice = async (iotDeviceId: string): Promise<IoTDevicePrimitives> => {
+    const response = await AxiosRequest.post(
+        `/iot/device/${ iotDeviceId }/link`,
+        { }
+    );
+    return response.data;
+}
 
 
 

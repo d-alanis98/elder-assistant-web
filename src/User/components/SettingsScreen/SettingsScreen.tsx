@@ -1,9 +1,10 @@
 import React from 'react';
 //Components
+import ThemeSettings from './Settings/ThemeSettings/ThemeSettings';
+import AccountSettings from './Settings/AccountSettings/AccountSettings';
 import ScreenContainer from '../../../Shared/components/Screens/ScreenContainer/ScreenContainer';
 //Styled components
 import { SettingsScreenContainer } from './SettingsScreen.styles';
-import ThemeSettings from './ThemeSettings/ThemeSettings';
 
 
 const SettingsScreen: React.FC = () => (
@@ -12,6 +13,7 @@ const SettingsScreen: React.FC = () => (
     >
         <SettingsScreenContainer>
             <ThemeSettings />
+            <AccountSettings />
         </SettingsScreenContainer>
     </ScreenContainer>
 );
