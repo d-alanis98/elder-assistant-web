@@ -8,6 +8,7 @@ import modalReducer from './reducers/modalDuck';
 import themeReducer, { restoreThemeAction } from './reducers/themeDuck';
 import devicesReducer from './reducers/devicesDuck';
 import deviceDataReducer from './reducers/deviceDataDuck';
+import subscriptionsReducer from './reducers/subscriptionsDuck';
 import notificationsReducer, { restoreViewedNotificationsAction } from './reducers/notificationsDuck';
 
 const rootReducer = combineReducers({
@@ -17,7 +18,8 @@ const rootReducer = combineReducers({
     theme: themeReducer,
     devices: devicesReducer, 
     deviceData: deviceDataReducer,
-    notifications: notificationsReducer
+    notifications: notificationsReducer,
+    subscriptions: subscriptionsReducer
 });
 
 const generateStore = () => {

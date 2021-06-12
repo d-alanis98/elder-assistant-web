@@ -12,7 +12,11 @@ export const LoginContainer = styled.div`
     margin: 0;
 `;
 
-export const LoginFormContainer = styled.div`
+export const LoginFormContainer = styled.form
+    .attrs(props => ({
+        ...(props as Object),
+        onSubmit: ev => ev.preventDefault()
+    }))`
     display: flex;
     flex-direction: column;
     background-color: rgba(255,255,255,0.85);

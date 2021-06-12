@@ -1,4 +1,7 @@
 import React, { useCallback } from 'react';
+//Domain
+import { UserPrimitives } from '../../../domain/User';
+//Hooks
 import { useAppSelector } from '../../../../Shared/store/hooks';
 //Styled components
 import { AvatarContainer, AvatarNameContainer } from './Avatar.styles';
@@ -57,3 +60,29 @@ const Avatar: React.FC<AvatarProps> = ({
 }
 
 export default React.memo(Avatar);
+
+//Simple avatar
+interface ExternalAvatarProps extends React.HTMLAttributes<HTMLDivElement> {
+    user: UserPrimitives;
+    size: number;
+    marginLeft?: number;
+    marginRight?: number;
+}
+export const ExternalUserAvatar: React.FC<ExternalAvatarProps> = ({
+    user,
+    size,
+    marginLeft,
+    marginRight,
+    ...ownProps
+}) => (
+    <AvatarContainer
+        size = { size }
+        marginLeft = { marginLeft }
+        marginRight = { marginRight }
+        { ...ownProps }
+    >
+        <AvatarNameContainer>
+            { user.name[0] }{ user.lastName[0] }
+        </AvatarNameContainer>
+    </AvatarContainer>
+);

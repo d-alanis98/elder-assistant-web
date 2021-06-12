@@ -1,6 +1,6 @@
 import { AnyAction } from 'redux';
 //Domain
-import { UserData, ValidUserTypes } from '../../../User/domain/User';
+import { UserData, UserPrimitives, ValidUserTypes } from '../../../User/domain/User';
 //Domain exceptions
 import SessionNotFound from '../../../UserAuthentication/domain/exceptions/SessionNotFound';
 //Infrastructure
@@ -12,6 +12,8 @@ import { hideModalAction } from './modalDuck';
 import { setThemeAction } from './themeDuck';
 //Constants
 import { ValidThemes } from '../../components/Theme/constants/ThemeParameters';
+//API
+import { getUsersByName } from '../../../User/infrastructure/api/usersApi';
 
 /**
  * @author Damián Alanís Ramírez
@@ -27,8 +29,11 @@ import { ValidThemes } from '../../components/Theme/constants/ThemeParameters';
 //Action types
 const LOGIN                 = 'LOGIN';
 const LOGOUT                = 'LOGOUT';
+const GET_USERS             = 'GET_USERS';
 const LOGIN_ERROR           = 'LOGIN_ERROR';
 const LOGIN_SUCCESS         = 'LOGIN_SUCCESS';
+const GET_USERS_ERROR       = 'GET_USERS_ERROR';
+const GET_USERS_SUCCESS     = 'GET_USERS_SUCCESS';
 const SET_CURRENT_SCREEN    = 'SET_CURRENT_SCREEN';
 const REFRESH_TOKEN_ERROR   = 'REFRESH_TOKEN_ERROR';
 const REFRESH_TOKEN_SUCCESS = 'REFRESH_TOKEN_SUCCESS';
@@ -43,10 +48,12 @@ interface UserState extends UserData {
     type: ValidUserTypes;
     error?: string;
     email: string;
+    users: UserPrimitives[];
     token: string;
     loading: boolean;
     loggedIn: boolean;
     lastName: string;
+    nextUsers?: string | null;
     dateOfBirth: string;
     currentScreen: string;
 };
@@ -56,10 +63,12 @@ const initialState: UserState = {
     name: '',
     type: ValidUserTypes.SECONDARY,
     email: '',
+    users: [],
     token: '',
     loading: false,
     loggedIn: false,
     lastName: '',
+    nextUsers: undefined,
     dateOfBirth: '',
     refreshToken: '',
     currentScreen: ''
@@ -69,7 +78,7 @@ const initialState: UserState = {
  * Reducer
  */
 
-const reducer = (state = initialState, action: AnyAction) => {
+const reducer = (state = initialState, action: AnyAction): UserState => {
     const { type, payload } = action;
 
     switch(type) {
@@ -80,6 +89,11 @@ const reducer = (state = initialState, action: AnyAction) => {
             };
         case LOGOUT:
             return initialState;
+        case GET_USERS:
+            return {
+                ...state,
+                loading: true,
+            };
         case LOGIN_ERROR:
             return {
                 ...state,
@@ -93,6 +107,18 @@ const reducer = (state = initialState, action: AnyAction) => {
                 ...userData,
                 loading: false,
                 loggedIn: true,
+            };
+        case GET_USERS_ERROR: 
+            return {
+                ...state,
+                error: payload,
+                loading: false,
+            };
+        case GET_USERS_SUCCESS:
+            return {
+                ...state,
+                ...payload,
+                loading: false,
             };
         case SET_CURRENT_SCREEN:
             return {
@@ -244,6 +270,38 @@ export const setCurrentScreenAction = (
         type: SET_CURRENT_SCREEN,
         payload: currentScreen
     });
+}
+
+/**
+ * Action to get the users by name.
+ * @param {string} name User name.
+ * @returns 
+ */
+export const getUsersByNameAction = (
+    name: string
+): ThunkAppAction => async (dispatch, getState) => {
+    //We dispath the loading action
+    dispatch({
+        type: GET_USERS
+    });
+    try {
+        //We get the starting point from state
+        const startingAt = getState().user.nextUsers || '';
+        //We request the users via the API method
+        const paginatedUsers = await getUsersByName({ name, startingAt });
+        dispatch({
+            type: GET_USERS_SUCCESS,
+            payload: {
+                users: paginatedUsers.data,
+                nextUsers: paginatedUsers.next
+            }
+        });
+    } catch(error) {
+        dispatch({
+            type: GET_USERS_ERROR,
+            payloaD: error.message
+        });
+    }
 }
 
 /**

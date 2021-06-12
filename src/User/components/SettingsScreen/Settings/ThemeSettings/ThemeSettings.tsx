@@ -11,10 +11,16 @@ import { setThemeAction } from '../../../../../Shared/store/reducers/themeDuck';
 import { faMoon, faSun } from '@fortawesome/free-solid-svg-icons';
 
 const ThemeSettings: React.FC = () => {
-    const { type: currentTheme } = useAppSelector(state => state.theme);
-    const dispatch = useAppDispatch();
     /**
-     * Function to get the current theme icon.
+     * Hooks
+     */
+    //Global state selector
+    const { type: currentTheme } = useAppSelector(state => state.theme);
+    //Actions dispatcher
+    const dispatch = useAppDispatch();
+    //Callbacks
+    /**
+     * Function to get the icon based on the current theme.
      */
     const getCurrentThemeIcon = useCallback(() => {
         if(currentTheme === ValidThemes.DARK_THEME)
@@ -22,9 +28,19 @@ const ThemeSettings: React.FC = () => {
         return faSun;
     }, [currentTheme]);
 
+    /**
+     * Function to set the theme at global state level.
+     */
     const setTheme = useCallback((theme: string) => {
         dispatch(setThemeAction(theme as ValidThemes));
     }, [dispatch]);
+
+    /**
+     * Function to determine if a theme option is the current one.
+     */
+    const isSelected = useCallback((theme: ValidThemes) => (
+        currentTheme === theme
+    ), [currentTheme]);
 
     return (
         <SettingContainer>
@@ -37,11 +53,13 @@ const ThemeSettings: React.FC = () => {
                 <ThemeOption 
                     value = { ValidThemes.LIGHT_THEME }
                     theme = 'Claro'
+                    checked = { isSelected(ValidThemes.LIGHT_THEME) }
                     setTheme = { setTheme }
                 />
                 <ThemeOption 
                     value = { ValidThemes.DARK_THEME }
                     theme = 'Obscuro'
+                    checked = { isSelected(ValidThemes.DARK_THEME) }
                     setTheme = { setTheme }
                 />
             </SettingModifierContainer>
@@ -57,18 +75,21 @@ export default ThemeSettings;
 interface ThemeOptionProps {
     value: ValidThemes;
     theme: string;
+    checked: boolean;
     setTheme: (theme: string) => void;
 }
 
 const ThemeOption: React.FC<ThemeOptionProps> = ({
     value,
     theme,
+    checked,
     setTheme
 }) => (
     <div>
         <RadioButtonSetting 
             name = 'theme'
             value = { value }
+            checked = { checked }
             onChange = { event => setTheme(event.target.value) }
         />
         <SettingLabel>{ theme }</SettingLabel>

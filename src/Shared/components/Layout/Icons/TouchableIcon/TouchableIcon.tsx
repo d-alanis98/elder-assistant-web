@@ -1,8 +1,8 @@
 import React from 'react';
+import { SizeProp } from '@fortawesome/fontawesome-svg-core';
 import { IconDefinition } from '@fortawesome/free-solid-svg-icons';
 //Styled components
 import { TouchableIconContainer, StyledTouchableIcon, TouchableIconBadgeContainer, TouchableIconBadgeText } from './TouchableIcon.styles';
-import { SizeProp } from '@fortawesome/fontawesome-svg-core';
 
 
 export interface TouchableIconProps extends React.HTMLAttributes<HTMLDivElement> {
