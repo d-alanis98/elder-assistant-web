@@ -1,6 +1,6 @@
 import React from 'react';
 //Domain
-import { UserPrimitives } from '../../../../domain/User';
+import { UserPrimitives } from '../../../../../User/domain/User';
 //Components
 import EmptyData from '../../../../../Shared/components/Miscelaneous/EmptyData/EmptyData';
 import UsersListItem from './UsersListItem';

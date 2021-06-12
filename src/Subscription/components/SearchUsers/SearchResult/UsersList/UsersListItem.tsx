@@ -1,10 +1,10 @@
 import React, { useCallback } from 'react';
 //Domain
-import { UserPrimitives } from '../../../../domain/User';
-import { SubscriptionPrimitives, SubscriptionValidStatus } from '../../../../../Subscription/domain/Subscription';
+import { UserPrimitives } from '../../../../../User/domain/User';
+import { SubscriptionPrimitives, SubscriptionValidStatus } from '../../../../domain/Subscription';
 //Components
 import LoadingText from '../../../../../Shared/components/Loaders/LoadingText';
-import { ExternalUserAvatar } from '../../../Layout/Avatar/Avatar';
+import { ExternalUserAvatar } from '../../../../../User/components/Layout/Avatar/Avatar';
 //Styled component
 import { 
     UserListItemRow, 
