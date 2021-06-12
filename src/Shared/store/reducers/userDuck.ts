@@ -13,11 +13,11 @@ import { setThemeAction } from './themeDuck';
 //Constants
 import { ValidThemes } from '../../components/Theme/constants/ThemeParameters';
 //API
-import { getUsersByName } from '../../../User/infrastructure/api/usersApi';
+import { getUserByID, getUsersByName } from '../../../User/infrastructure/api/usersApi';
 
 /**
  * @author Damián Alanís Ramírez
- * @version 1.1.1
+ * @version 1.2.1
  * @description Specification of the users reducer, containing action types, the
  * reducer itself and the action functions.
  */
@@ -56,6 +56,7 @@ interface UserState extends UserData {
     nextUsers?: string | null;
     dateOfBirth: string;
     currentScreen: string;
+    usersDictionary: UsersDictionary;
 };
 
 const initialState: UserState = {
@@ -71,7 +72,8 @@ const initialState: UserState = {
     nextUsers: undefined,
     dateOfBirth: '',
     refreshToken: '',
-    currentScreen: ''
+    currentScreen: '',
+    usersDictionary: { },
 };
 
 /**
@@ -293,7 +295,11 @@ export const getUsersByNameAction = (
             type: GET_USERS_SUCCESS,
             payload: {
                 users: paginatedUsers.data,
-                nextUsers: paginatedUsers.next
+                nextUsers: paginatedUsers.next,
+                usersDictionary: getUpdatedUsersDictionary(
+                    paginatedUsers.data,
+                    getState().user.usersDictionary
+                )
             }
         });
     } catch(error) {
@@ -303,6 +309,38 @@ export const getUsersByNameAction = (
         });
     }
 }
+
+/**
+ * Action to get the user data by ID, it performs a search in the users dictionary, if no entry is found the data is requested
+ * to the API and then saved to the dictionary for future queries.
+ * @param {string} userId User ID.
+ * @returns 
+ */
+export const getUserByIdAction = (userId: string): ThunkAppAction<Promise<UserPrimitives>> => async (dispatch, getState) => {
+    //First, we verify if the user does not exists in the dictionary
+    const { usersDictionary } = getState().user;
+    const foundUser = usersDictionary[userId];
+    if(foundUser)
+        return foundUser;
+    //If the user is not found in the existing dictionary, we request the user to the API
+    try {
+        const userData = await getUserByID(userId);
+        //We update the users dictionary
+        dispatch({
+            type: GET_USERS_SUCCESS,
+            payload: {
+                usersDictionary: getUpdatedUsersDictionary(
+                    [ userData ],
+                    getState().user.usersDictionary
+                )  
+            }
+        });
+        //We return the value
+        return userData;
+    } catch(error) {
+        return Promise.reject(error.message);
+    }
+} 
 
 /**
  * Helpers
@@ -315,4 +353,26 @@ const clearStorage = async () => {
     localStorage.removeItem(USER_KEY);
     localStorage.removeItem(TOKEN_KEY);
     localStorage.removeItem(REFRESH_TOKEN_KEY);
+}
+
+/**
+ * Function to add a collection of users to the users dictionary. Getting this updated dictionary.
+ * @param {UserPrimitives[]} usersToAdd Users to add to the dictionary.
+ * @param {UsersDictionary} previousUsersDictionary Existing users dictionary.
+ * @returns {UsersDictionary}
+ */
+const getUpdatedUsersDictionary = (
+    usersToAdd: UserPrimitives[],
+    previousUsersDictionary: UsersDictionary
+) => ({
+    ...previousUsersDictionary,
+    ...usersToAdd.reduce((accumulated, current) => ({
+        ...accumulated,
+        [current._id]: current
+    }), {})
+});
+
+//Types
+interface UsersDictionary {
+    [userId: string]: UserPrimitives;
 }

@@ -21,5 +21,10 @@ export const getUsersByName = async ({
     return response.data;
 }
 
+export const getUserByID = async (userId: string): Promise<UserPrimitives> => {
+    const response = await AxiosRequest.get(`/user/${ userId }`);
+    return response.data;
+}
+
 //Types
 type UsersList = PaginatedResult<UserPrimitives>;

@@ -1,5 +1,11 @@
 import React, { useEffect } from 'react';
+//Components
 import LoadingText from '../../../Shared/components/Loaders/LoadingText';
+import NotificationsListItem from './NotificationsListItem';
+//Styled components
+import { 
+    NotificationsListContainer 
+} from './NotificationsList.styles';
 //Cuatom hooks
 import useNotifications from '../../../Shared/store/hooks/notifications/useNotifications';
 
@@ -30,17 +36,16 @@ const NotificationsList: React.FC = () => {
         />
 
     return (
-        <div>
+        <NotificationsListContainer>
             {
                 Object.values(notifications).map(notification => (
-                    <div
+                    <NotificationsListItem 
                         key = { notification._id }
-                    >
-                        { notification.type }
-                    </div>
+                        notification = { notification }
+                    />
                 ))
             }
-        </div>
+        </NotificationsListContainer>
     )
 };
 

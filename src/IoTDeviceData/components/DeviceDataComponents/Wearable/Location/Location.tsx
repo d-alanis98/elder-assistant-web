@@ -4,8 +4,8 @@ import Map from '../../../../../Shared/components/Map/Map';
 import DeviceDataWidget, { BaseWidgetProps } from '../../../DeviceDataWidget/DeviceDataWidget';
 //Styled components
 import { LastLocationLabel, LastLocationLabelContainer, LastLocationTime } from './Location.styles';
-//Helpers
-import DateHelper from '../../../../../Shared/utils/Date/DateHelper';
+//Hooks
+import useLastUpdate from '../../../../../Shared/hooks/useLastUpdate';
 //Icons
 import { faMapMarkerAlt } from '@fortawesome/free-solid-svg-icons';
 
@@ -20,31 +20,8 @@ const Location: React.FC<LocationProps> = ({
     /**
      * Hooks
      */
-    //State
-    const [lastUpdate, setLastUpdate] = React.useState<string | null>(null);
-
-    //Callbacks
-    const updateDateDifference = React.useCallback(() => {
-        setLastUpdate(
-            DateHelper
-                .getDateDifferenceFromIsoString(event.issuedAt)
-        );
-    }, [
-        event,
-        setLastUpdate
-    ]);
-
-    //Effects
-    React.useEffect(() => {
-        updateDateDifference();
-        //We set the update interval
-        const interval = setInterval(
-            updateDateDifference, 
-            10_000
-        );
-        //Cleanup
-        return () => clearInterval(interval);
-    }, [updateDateDifference]);
+    //Last update date label
+    const lastUpdate = useLastUpdate(event.issuedAt);
 
     return (
         <DeviceDataWidget
