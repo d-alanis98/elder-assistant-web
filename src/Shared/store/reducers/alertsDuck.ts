@@ -16,7 +16,7 @@ import { AlertTypes } from '../../../Alerts/domain/Alerts';
 const SET_ALERT     = 'SET_ALERT';
 const HIDE_ALERT    = 'HIDE_ALERT';
 //Other constants
-const DEFAULT_NOTIFICATION_TIME = 3000;
+const DEFAULT_NOTIFICATION_TIME = 3500;
 //State contract
 interface AlertsState {
     type: AlertTypes,

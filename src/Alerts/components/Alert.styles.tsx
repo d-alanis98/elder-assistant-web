@@ -1,8 +1,6 @@
 import styled from 'styled-components';
 //Domain
 import { AlertTypes } from '../domain/Alerts';
-//Theme
-import { ThemeParameters } from '../../Shared/components/Theme/constants/ThemeParameters';
 
 interface AlertContainerProps {
     type: AlertTypeValues;
@@ -19,57 +17,55 @@ export const AlertContainer = styled.div<AlertContainerProps>`
         ? 'flex'
         : 'none'
     };
-    padding: 0.25rem;
+    padding: 0.2rem;
     align-items: center;
     justify-content: center;
-    & > div {
-        border: 3px solid ${ ({ 
-            type,
-            theme, 
-        }) => getNotificationColor(type, theme) };
-    }
 `;
 
 interface AlertContentProps {
     type: AlertTypeValues;
 }
 export const AlertContent = styled.div<AlertContentProps>`
-    width: 100%;
-    padding: 0.75rem;
+    width: clamp(360px, 100%, 700px);
+    padding: 0.75rem 1.25rem;
     border-radius: 0.5rem;
-    opacity: 0.85;
-    color: #fff;
-    background-color: ${ ({ 
-        type,
-        theme, 
-    }) => getNotificationColor(type, theme) };
+    opacity: 0.95;
+    color: ${ ({ type }) => notificationColorsByType[type].fontColor };
+    background-color: ${ ({ type }) => notificationColorsByType[type].backgroundColor };
+    border: 2px solid ${ ({ type }) => notificationColorsByType[type].borderColor };
 `;
 
 /**
  * Helpers
  */
-//Functions
-const getNotificationColor = (
-    type: AlertTypeValues,
-    theme: ThemeParameters
-) => {
-    const color = getNotificationColorByType(theme)[type];
-    return color || theme.informationColor;
-}
 
-const getNotificationColorByType = (
-    theme: ThemeParameters
-): NotificationColorsDictionary => ({
-    [AlertTypes.DANGER]: theme.alertColor,
-    [AlertTypes.PRIMARY]: theme.primaryColor,
-    [AlertTypes.SUCCESS]: theme.successColor,
-    [AlertTypes.WARNING]: theme.warningColor,
-    [AlertTypes.INFORMATION]: theme.informationColor
-});
+const notificationColorsByType = {
+    [AlertTypes.DANGER]: {
+        fontColor: '#842029',
+        borderColor: '#f5c2c7',
+        backgroundColor: '#f8d7da',
+    },
+    [AlertTypes.PRIMARY]: {
+        fontColor: '#084298',
+        borderColor: '#b6d4fe',
+        backgroundColor: '#cfe2ff',
+    },
+    [AlertTypes.SUCCESS]: {
+        fontColor: '#0f5132',
+        borderColor: '#badbcc',
+        backgroundColor: '#d1e7dd',
+    },
+    [AlertTypes.WARNING]: {
+        fontColor: '#664d03',
+        borderColor: '#ffecb5',
+        backgroundColor: '#fff3cd',
+    },
+    [AlertTypes.INFORMATION]: {
+        fontColor: '#055160',
+        borderColor: '#b6effb',
+        backgroundColor: '#cff4fc',
+    }
+};
 
 //Types 
 type AlertTypeValues = keyof typeof AlertTypes;
-
-interface NotificationColorsDictionary {
-    [key: string]: string;
-}
