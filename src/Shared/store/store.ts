@@ -6,6 +6,7 @@ import userReducer, { restoreSessionAction } from './reducers/userDuck';
 import chatReducer from './reducers/chatDuck';
 import modalReducer from './reducers/modalDuck';
 import themeReducer, { restoreThemeAction } from './reducers/themeDuck';
+import alertsReducer from './reducers/alertsDuck';
 import devicesReducer from './reducers/devicesDuck';
 import deviceDataReducer from './reducers/deviceDataDuck';
 import subscriptionsReducer from './reducers/subscriptionsDuck';
@@ -16,6 +17,7 @@ const rootReducer = combineReducers({
     chat: chatReducer,
     modal: modalReducer,
     theme: themeReducer,
+    alerts: alertsReducer,
     devices: devicesReducer, 
     deviceData: deviceDataReducer,
     notifications: notificationsReducer,

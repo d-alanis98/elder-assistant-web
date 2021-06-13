@@ -3,6 +3,7 @@ import { ThemeProvider } from 'styled-components';
 //Domain
 import OnUpdatedAuthToken from './UserAuthentication/domain/event-handlers/OnUpdatedAuthToken';
 //Components
+import Alert from './Alerts/components/Alert';
 import Routes from './Shared/components/Routes/Routes';
 import RequestErrorHandler from './Shared/infrastructure/Errors/RequestErrorHandler';
 import AxiosRequest from './Shared/infrastructure/Requests/AxiosRequest';
@@ -52,6 +53,7 @@ const App: React.FC = () => {
         <ThemeProvider
             theme = { themeToApply }
         >
+            <Alert />
             <Routes />
         </ThemeProvider>
     );

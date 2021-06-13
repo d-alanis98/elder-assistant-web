@@ -10,6 +10,7 @@ import { ThunkAppAction } from '../store';
 //External actions
 import { hideModalAction } from './modalDuck';
 import { setThemeAction } from './themeDuck';
+import { createAlertAction } from './alertsDuck';
 //Constants
 import { ValidThemes } from '../../components/Theme/constants/ThemeParameters';
 //API
@@ -17,7 +18,7 @@ import { getUserByID, getUsersByName } from '../../../User/infrastructure/api/us
 
 /**
  * @author Damián Alanís Ramírez
- * @version 1.2.1
+ * @version 1.3.1
  * @description Specification of the users reducer, containing action types, the
  * reducer itself and the action functions.
  */
@@ -156,7 +157,7 @@ export default reducer;
  * @param {FormData|Object} data The credentials object or form data.
  * @returns 
  */
-export const loginAction = (data: FormData | Object): ThunkAppAction<Promise<void>> => async dispatch => {
+export const loginAction = (data: FormData | Object): ThunkAppAction<Promise<void>> => async (dispatch, _) => {
     try {
         const { user, token, refreshToken } = await login(data);
         //We save the tokens in the storage
@@ -172,8 +173,18 @@ export const loginAction = (data: FormData | Object): ThunkAppAction<Promise<voi
                 refreshToken
             }
         });
-        
+        //We create the login success system alert
+        createAlertAction({
+            type: 'SUCCESS',
+            message: 'Sesión iniciada'
+        })(dispatch, _, null);
     } catch(error) {
+        //We create the system alert
+        createAlertAction({
+            type: 'DANGER',
+            message: error.message
+        })(dispatch, _, null);
+        //We dispatch the login error
         dispatch({
             type: LOGIN_ERROR,
             payload: error.message,
@@ -186,7 +197,7 @@ export const loginAction = (data: FormData | Object): ThunkAppAction<Promise<voi
  * LOGIN_SUCCESS action if it succeeds, otherwise it dispatchs the LOGIN_ERROR action with a custom exception SessionNotFound.
  * @returns 
  */
-export const restoreSessionAction = (): ThunkAppAction => async dispatch => {
+export const restoreSessionAction = (): ThunkAppAction => async (dispatch, _) => {
     try {
         //We get the data from the local storage
         const user = localStorage.getItem(USER_KEY);
@@ -206,7 +217,18 @@ export const restoreSessionAction = (): ThunkAppAction => async dispatch => {
                 refreshToken
             }
         });
+        //We create the restore session success system alert
+        createAlertAction({
+            type: 'SUCCESS',
+            message: 'Sesión restaurada'
+        })(dispatch, _, null);
     } catch(error) {
+        //We create the system alert
+        createAlertAction({
+            type: 'DANGER',
+            message: error.message
+        })(dispatch, _, null);
+        //We dispatch the login error
         dispatch({
             type: LOGIN_ERROR,
             payload: error.message,
@@ -219,7 +241,7 @@ export const restoreSessionAction = (): ThunkAppAction => async dispatch => {
  * @param {string} newToken The new authorization token.
  * @returns 
  */
-export const updateAuthTokenAction = (newToken: string): ThunkAppAction => async dispatch => {
+export const updateAuthTokenAction = (newToken: string): ThunkAppAction => async (dispatch, _) => {
     try {
         localStorage.setItem(TOKEN_KEY, newToken);
         //We dispatch the action with the new token as payload
@@ -228,11 +250,16 @@ export const updateAuthTokenAction = (newToken: string): ThunkAppAction => async
             payload: newToken,
         });
     } catch(error) {
+        //We dispatch the token error
         dispatch({
             type: REFRESH_TOKEN_ERROR,
             payload: error.message,
         });
-        //Set session expired action
+        //We create the error system alert
+        createAlertAction({
+            type: 'DANGER',
+            message: error.message
+        })(dispatch, _, null);
     }
 }
 
@@ -248,7 +275,11 @@ export const logoutAction = (): ThunkAppAction => (dispatch, getState) => {
     //We return to the defaults
     hideModalAction()(dispatch, getState, undefined);
     setThemeAction(ValidThemes.LIGHT_THEME)(dispatch, getState, undefined);
-    //Create notification (logout)
+    //We create the system alert
+    createAlertAction({
+        type: 'WARNING',
+        message: 'Se cerró la sesión'
+    })(dispatch, getState, null);
 }
 
 /**
@@ -257,7 +288,11 @@ export const logoutAction = (): ThunkAppAction => (dispatch, getState) => {
  */
 export const sessionExpiredAction = (): ThunkAppAction => (dispatch, getState) => {
     logoutAction()(dispatch, getState, null);
-    //Create notification actio (session expired)
+    //We create the alert
+    createAlertAction({
+        type: 'WARNING',
+        message: 'La sesión expiró'
+    })(dispatch, getState, null);
 } 
 
 /**
@@ -303,6 +338,10 @@ export const getUsersByNameAction = (
             }
         });
     } catch(error) {
+        createAlertAction({
+            type: 'DANGER',
+            message: error.message
+        })(dispatch, getState, null);
         dispatch({
             type: GET_USERS_ERROR,
             payloaD: error.message
@@ -338,6 +377,11 @@ export const getUserByIdAction = (userId: string): ThunkAppAction<Promise<UserPr
         //We return the value
         return userData;
     } catch(error) {
+        //We create the system alert
+        createAlertAction({
+            type: 'DANGER',
+            message: error.message
+        })(dispatch, getState, null);
         return Promise.reject(error.message);
     }
 } 
