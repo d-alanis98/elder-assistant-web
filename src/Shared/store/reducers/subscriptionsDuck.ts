@@ -1,16 +1,18 @@
 import { AnyAction } from 'redux';
 import { ThunkAppAction } from '../store';
 //Domain
-import { SubscriptionPrimitives } from '../../../Subscription/domain/Subscription';
+import { SubscriptionPrimitives, SubscriptionValidStatus } from '../../../Subscription/domain/Subscription';
 //API
 import { 
     requestSubscription,
     getRequestedSubscriptions
 } from '../../../Subscription/infrastructure/subscriptionApi';
+//External actions
+import { getUserByIdAction } from './userDuck';
 
 /**
  * @author Damián Alanís Ramírez
- * @version 1.1.1
+ * @version 1.2.1
  * @description Specification of the subscriptions reducer, containing action types, the reducer itself and the action functions.
  */
 
@@ -26,11 +28,13 @@ interface SubscriptionsState {
     error?: string;
     loading: boolean;
     subscriptions: SubscriptionsDictionary;
+    acceptedSubscriptions: SubscriptionPrimitives[];
 }
 // Initial state
 const initialState: SubscriptionsState = {	
     loading: false,
-    subscriptions: { }
+    subscriptions: { },
+    acceptedSubscriptions: []
 };
 
 /**
@@ -56,7 +60,7 @@ const reducer = (state = initialState, action: AnyAction): SubscriptionsState =>
                 ...state,
                 error: undefined,
                 loading: false,
-                subscriptions: payload,
+                ...payload,
             };
         default:
             return state;
@@ -73,7 +77,7 @@ export default reducer;
  * Action to get the requested subscriptions with PENDING state from the API.
  * @returns 
  */
-export const getRequestedSubscriptionsAction = (): ThunkAppAction => async (dispatch, _) => {
+export const getRequestedSubscriptionsAction = (): ThunkAppAction<Promise<void>> => async (dispatch, _) => {
     dispatch({
         type: GET_SUBSCRIPTIONS
     });
@@ -81,11 +85,21 @@ export const getRequestedSubscriptionsAction = (): ThunkAppAction => async (disp
         const requestedSubscriptions = await getRequestedSubscriptions();
         dispatch({
             type: GET_SUBSCRIPTIONS_SUCCESS,
-            payload: requestedSubscriptions.reduce((accumulated, current) => ({
-                ...accumulated,
-                [current.to]: current
-            }), {})
+            payload: {
+                subscriptions: requestedSubscriptions.reduce((accumulated, current) => ({
+                    ...accumulated,
+                    [current.to]: current
+                }), {}),
+                acceptedSubscriptions: requestedSubscriptions.filter(subscription => (
+                    subscription.status === SubscriptionValidStatus.ACCEPTED
+                ))
+            }
         });
+        //We set the users dictionary, because we maybe are going to need the user data of the subscription users
+        requestedSubscriptions.forEach(subscription => {
+            getUserByIdAction(subscription.to)(dispatch, _, null);
+            getUserByIdAction(subscription.from)(dispatch, _, null);
+        })
     } catch(error) {
         dispatch({
             type: GET_SUBSCRIPTIONS_ERROR,
@@ -110,8 +124,10 @@ export const requestSubscriptionAction = (
         dispatch({
             type: GET_SUBSCRIPTIONS_SUCCESS,
             payload: {
-                ...existingSubscriptions,
-                [createdSubscriptionRequest.to]: createdSubscriptionRequest
+                subscriptions: {
+                    ...existingSubscriptions,
+                    [createdSubscriptionRequest.to]: createdSubscriptionRequest
+                }
             }
         });
         //We return the created subscription

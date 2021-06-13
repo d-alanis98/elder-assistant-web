@@ -19,7 +19,8 @@ const useUsersSearch = () => {
     const { 
         _id: userId, 
         users, 
-        loading 
+        loading,
+        usersDictionary 
     } = useAppSelector(state => state.user);
     //Callbacks
     const getUsersByName = useCallback((name: string) => {
@@ -35,7 +36,8 @@ const useUsersSearch = () => {
         userId,
         fetching: loading,
         getUserById,
-        getUsersByName
+        getUsersByName,
+        usersDictionary
     }
 }
 

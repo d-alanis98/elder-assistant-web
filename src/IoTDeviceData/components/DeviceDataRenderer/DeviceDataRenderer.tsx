@@ -35,11 +35,14 @@ const DeviceDataRenderer: React.FC<DeviceDataRendererProps> = ({
             return;
         //We retrieve the last data for each device
         devices.forEach(device => {
-            getLastDeviceData(device._id)
+            getLastDeviceData(device._id, device.ownedBy)
                 .then(() => setFetching(false))
                 .catch(() => setFetching(false));
         });
-    }, [devices, getLastDeviceData]);
+    }, [
+        devices, 
+        getLastDeviceData
+    ]);
 
     if(fetching)
         return <LoadingText />

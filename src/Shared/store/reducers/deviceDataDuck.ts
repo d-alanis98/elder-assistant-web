@@ -12,7 +12,7 @@ import { ThunkAppAction } from '../store';
 
 /**
  * @author Damián Alanís Ramírez
- * @version 1.2.1
+ * @version 1.4.2
  * @description Specification of the device data reducer, containing action types, the reducer itself and the action functions.
  */
 
@@ -90,11 +90,17 @@ export default reducer;
  * @param {string} deviceId Id of the device whose data we want to get.
  * @returns 
  */
-export let getLastDeviceDataAction = (deviceId: string): ThunkAppAction<Promise<void>> => async (dispatch, getState) => new Promise((resolve, reject) => {
+export let getLastDeviceDataAction = (
+    deviceId: string,
+    ownerUserId: string = ''
+): ThunkAppAction<Promise<void>> => async (dispatch, getState) => new Promise((resolve, reject) => {
     //We get the device's event keys
-    const eventKeys: string[] = getDeviceEventKeysAction(deviceId)(dispatch, getState, null);
+    const eventKeys: string[] = getDeviceEventKeysAction(
+        deviceId,
+        ownerUserId
+    )(dispatch, getState, null);
     //We get the fetch data promises for each event key
-    const promises: Promise<IoTDeviceDataPrimitives>[] = getDeviceDataByEventKeysPromises(eventKeys, deviceId);
+    const promises: Promise<IoTDeviceDataPrimitives>[] = getDeviceDataByEventKeysPromises(eventKeys, deviceId, ownerUserId);
     //We await for all the promises to resolve
     Promise.all(promises)
         .then(deviceEventsData => {
@@ -121,13 +127,16 @@ export let getLastDeviceDataAction = (deviceId: string): ThunkAppAction<Promise<
  * @param {string} deviceId Id of the device whose data we want to get.
  * @returns 
  */
-export let getLastDeviceDataWithLoaderAction = (deviceId: string): ThunkAppAction => (dispatch, getState) => {
+export let getLastDeviceDataWithLoaderAction = (
+    deviceId: string,
+    ownerUserId?: string
+): ThunkAppAction => (dispatch, getState) => {
     //To set the fetching state to true
     dispatch({
         type: GET_DEVICE_DATA,
     });
     //We dispatch the action to get the last device data
-    getLastDeviceDataAction(deviceId)(dispatch, getState, null);
+    getLastDeviceDataAction(deviceId, ownerUserId)(dispatch, getState, null);
 }
 
 /**
@@ -162,13 +171,19 @@ export let updateLastDeviceDataAction = (deviceData: IoTDeviceDataPrimitives): T
  * @param {string} deviceId The ID of the device.
  * @returns 
  */
-const getDeviceDataByEventKeysPromises = (eventKeys: string[], deviceId: string) => {
+const getDeviceDataByEventKeysPromises = (
+    eventKeys: string[], 
+    deviceId: string,
+    ownerUserId?: string
+) => {
     const promises: Promise<IoTDeviceDataPrimitives>[] = [];
     //We get the request promise for each event key
     eventKeys.forEach((eventKey: string) => {
-        const deviceEventsDataPromise = getDevicesDataByEventType(
-            { eventKey, deviceId }
-        );
+        const deviceEventsDataPromise = getDevicesDataByEventType({ 
+            eventKey, 
+            deviceId, 
+            ownerUserId 
+        });
         promises.push(deviceEventsDataPromise);        
     });
     return promises;

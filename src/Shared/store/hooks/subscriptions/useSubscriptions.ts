@@ -21,22 +21,24 @@ const useSubscriptions = () => {
     //State selector
     const { 
         loading: fetching,
-        subscriptions
+        subscriptions,
+        acceptedSubscriptions
     } = useAppSelector(state => state.subscriptions);
     //Callbacks
     const requestSubscription = useCallback(async (primaryUserId: string) => (
         dispatch(requestSubscriptionAction(primaryUserId))
     ), [dispatch]);
 
-    const getRequestedSubscriptions = useCallback(() => {
-        dispatch(getRequestedSubscriptionsAction());
-    }, [dispatch]);
+    const getRequestedSubscriptions = useCallback(async () => (
+        dispatch(getRequestedSubscriptionsAction())
+    ), [dispatch]);
 
     return {
         fetching,
         subscriptions,
         requestSubscription,
-        getRequestedSubscriptions
+        acceptedSubscriptions,
+        getRequestedSubscriptions,
     }
 }
 

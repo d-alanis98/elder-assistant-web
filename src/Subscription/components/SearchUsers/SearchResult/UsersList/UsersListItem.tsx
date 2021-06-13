@@ -49,7 +49,7 @@ export default UsersListItem;
 /**
  * UserData
  */
-const UserDataColumn: React.FC<UsersListItemProps> = ({
+export const UserDataColumn: React.FC<UsersListItemProps> = ({
     user
 }) => ( 
     <UserListitemColumn>

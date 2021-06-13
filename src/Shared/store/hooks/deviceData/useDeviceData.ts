@@ -1,7 +1,8 @@
-import { useEffect, useCallback } from 'react'
+import { useEffect, useCallback } from 'react';
+//Domain
+import { IoTDeviceDataPrimitives } from '../../../../IoTDeviceData/domain/IoTDeviceData';
 //Hooks
 import { useAppDispatch, useAppSelector } from '..';
-import { IoTDeviceDataPrimitives } from '../../../../IoTDeviceData/domain/IoTDeviceData';
 //Actions
 import { 
     getLastDeviceDataAction, 
@@ -12,7 +13,7 @@ import {
 
 /**
  * @author Damián Alanís Ramírez
- * @version 1.3.2
+ * @version 2.4.2
  * @description Custom hooks to access the device data state and actions.
  */
 const useDeviceData = (deviceId?: string) => {
@@ -31,8 +32,11 @@ const useDeviceData = (deviceId?: string) => {
     }, [deviceId, dispatch]);
 
     //Callbacks
-    const getLastDeviceData = useCallback((deviceId: string) => (
-        dispatch(getLastDeviceDataAction(deviceId))
+    const getLastDeviceData = useCallback((
+        deviceId: string, 
+        ownerUserId?: string
+    ) => (
+        dispatch(getLastDeviceDataAction(deviceId, ownerUserId))
     ), [dispatch]);
 
     const updateLastDeviceData = useCallback((deviceData: IoTDeviceDataPrimitives) => {

@@ -10,11 +10,12 @@ import AxiosRequest from '../../../Shared/infrastructure/Requests/AxiosRequest';
 
 export const getDevicesDataByEventType = async ({
     eventKey,
-    deviceId
+    deviceId,
+    ownerUserId
 }: GetDeviceDataByEventType): Promise<IoTDeviceDataPrimitives> => {
     try {
         const response = await AxiosRequest.get(
-            `/iot/device/${deviceId}/latest?eventKey=${eventKey}`
+            `/iot/device/${deviceId}/latest?eventKey=${eventKey}&primaryUserId=${ ownerUserId }`
         );
         return response.data;
     } catch (error) {
@@ -27,6 +28,7 @@ export const getDevicesDataByEventType = async ({
 interface GetDeviceDataByEventType {
     eventKey: string;
     deviceId: string;
+    ownerUserId?: string;
 }
 
 
