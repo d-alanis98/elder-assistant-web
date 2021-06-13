@@ -1,4 +1,5 @@
 import React from 'react';
+import styled from 'styled-components';
 //Components
 import Label from '../../Layout/Labels/Label';
 //Styled components
@@ -43,19 +44,43 @@ export default ScreenContainer;
 
 interface ScreenTitleProps {
     title?: string | React.ReactElement;
+    className?: string;
 }
 
-const ScreenTitle: React.FC<ScreenTitleProps> = ({ title }) => title 
+const ScreenTitle: React.FC<ScreenTitleProps> = ({ 
+    title,
+    className 
+}) => title 
     ?  typeof title === 'string'
-        ? <Label fontSize='1.5rem' style={{ textAlign: 'center'}}>{ title }</Label>
+        ? (
+            <Label 
+                style = {{ textAlign: 'center'}}
+                fontSize = '1.5rem' 
+                className = { className }
+            >
+                { title }
+            </Label>
+        )
         : title
     : null;
 
+const StyledScreenTitle = styled(ScreenTitle)`${({ theme }) => `
+    position: -webkit-sticky;
+    position: sticky;
+    top: 0;
+    background: ${ theme.backgroundColor };
+    width: 100%;
+    z-index: 99;
+    padding: 0.75rem 0.5rem;
+`}`;
+
 const ScreenContent: React.FC<ScreenTitleProps> = ({ title, children }) => (
     <>
-        <ScreenTitle 
+        <StyledScreenTitle 
             title = { title }
         />
         { children }
     </>
 );
+
+

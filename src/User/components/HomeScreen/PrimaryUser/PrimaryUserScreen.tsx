@@ -7,6 +7,10 @@ import { PrimaryUserScreenContainer } from './PrimaryUserScreen.styles';
 import useDevices from '../../../../Shared/store/hooks/devices/useDevices';
 
 const PrimaryUserScreen: React.FC = () => {
+    /**
+     * Hooks
+     */
+    //Devices
     const { devices } = useDevices();
     return (
         <PrimaryUserScreenContainer>

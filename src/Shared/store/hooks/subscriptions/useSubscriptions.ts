@@ -4,12 +4,15 @@ import { useAppDispatch, useAppSelector } from '..';
 //Actions
 import { 
     requestSubscriptionAction,
-    getRequestedSubscriptionsAction, 
+    getRequestedSubscriptionsAction,
+    acceptOrRejectSubscriptionAction, 
 } from '../../reducers/subscriptionsDuck';
+//Types
+import { AcceptOrRejectSubscription } from '../../../../Subscription/infrastructure/subscriptionApi';
 
 /**
  * @author Damián Alanís Ramírez
- * @version 1.1.1
+ * @version 1.2.1
  * @description Custom hook for the Subscriptions entity.
  */
 const useSubscriptions = () => {
@@ -33,12 +36,20 @@ const useSubscriptions = () => {
         dispatch(getRequestedSubscriptionsAction())
     ), [dispatch]);
 
+    const acceptOrRejectSubscription = useCallback(({
+        status,
+        subscriptionId
+    }: AcceptOrRejectSubscription) => {
+        dispatch(acceptOrRejectSubscriptionAction({ status, subscriptionId }));
+    }, [dispatch]);
+
     return {
         fetching,
         subscriptions,
         requestSubscription,
         acceptedSubscriptions,
         getRequestedSubscriptions,
+        acceptOrRejectSubscription
     }
 }
 

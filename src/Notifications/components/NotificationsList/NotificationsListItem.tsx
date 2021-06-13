@@ -3,6 +3,7 @@ import React from 'react';
 import { NotificationPrimitives } from '../../domain/Notifications';
 //Components
 import NotificationIcon from './NotificationIcon/NotificationIcon';
+import NotificationAction from './NotificationAction/NotificationAction';
 import NotificationContent from './NotificationContent/NotificationContent';
 //Styled components
 import { 
@@ -31,6 +32,9 @@ const NotificationsListItem: React.FC<NotificationsProps> = ({
                 notification = { notification }
             />
             <NotificationIssueDate 
+                notification = { notification }
+            />
+            <NotificationAction 
                 notification = { notification }
             />
         </NotificationDataContainer>

@@ -58,7 +58,7 @@ interface ButtonTextProps extends React.HTMLAttributes<HTMLSpanElement> {
 }
 
 export const StyledButtonText = styled.span<ButtonTextProps>`${({ theme, fontSize }) => `
-    color: ${ theme.backgroundColor };
+    color: #fff;
     font-family: sans-serif;
     font-size: ${ fontSize || 20}px;
 `}`;
