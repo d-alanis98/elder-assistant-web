@@ -8,6 +8,8 @@ import { IoTDeviceDataPrimitives } from '../../domain/IoTDeviceData';
 import { BaseWidgetProps } from '../DeviceDataWidget/DeviceDataWidget';
 //Components
 import Location from './Wearable/Location/Location';
+import HeartRate from './Wearable/HeartRate/HeartRate';
+import PanicAlert from './Wearable/PanicAlert/PanicAlert';
 import CurrentDosis from './Pillbox/CurrentDosis/CurrentDosis';
 
 type DataComponentsDictionary = {
@@ -21,7 +23,9 @@ export const deviceDataComponents: DataComponentsDictionary = {
         CurrentDosis: CurrentDosis
     },
     [IoTDeviceTypes.WEARABLE]: {
-        Location: Location
+        Location: Location,
+        HeartRate: HeartRate,
+        PanicAlert: PanicAlert
     }
 }
 

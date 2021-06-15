@@ -5,12 +5,16 @@ interface MapProps {
     zoom?: number;
     center: Coordinate;
     marker: Coordinate;
+    mapWidth?: number | string;
+    mapHeight?: number | string;
 }
 
 const Map: React.FC<MapProps> = ({
     zoom = 15,
     center,
-    marker
+    marker,
+    mapWidth,
+    mapHeight
 }) => (
     <LoadScript
         googleMapsApiKey = { process.env.REACT_APP_GOOGLE_MAPS_KEY || '' }
@@ -20,7 +24,11 @@ const Map: React.FC<MapProps> = ({
                 <GoogleMap
                     zoom = { zoom }
                     center = { center }
-                    mapContainerStyle = { containerStyle }
+                    mapContainerStyle = {{
+                        ...containerStyle,
+                        width: mapWidth || containerStyle.width,
+                        height: mapHeight || containerStyle.height 
+                    }}
                 >
                     <Marker 
                         position = { marker }
@@ -29,7 +37,9 @@ const Map: React.FC<MapProps> = ({
             ), [
                 zoom,
                 center,
-                marker
+                marker,
+                mapWidth,
+                mapHeight
             ])
         }
     </LoadScript>
@@ -47,6 +57,5 @@ interface Coordinate {
 //Styles
 const containerStyle = {
     width: '100%',
-    height: '100%',
-    minHeight: '300px'
+    height: 300,
 };

@@ -39,7 +39,7 @@ export const AlertContent = styled.div<AlertContentProps>`
  * Helpers
  */
 
-const notificationColorsByType = {
+export const notificationColorsByType = {
     [AlertTypes.DANGER]: {
         fontColor: '#842029',
         borderColor: '#f5c2c7',

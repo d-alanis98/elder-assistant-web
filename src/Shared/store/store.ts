@@ -8,7 +8,7 @@ import modalReducer from './reducers/modalDuck';
 import themeReducer, { restoreThemeAction } from './reducers/themeDuck';
 import alertsReducer from './reducers/alertsDuck';
 import devicesReducer from './reducers/devicesDuck';
-import deviceDataReducer from './reducers/deviceDataDuck';
+import deviceDataReducer, { restoreAttendedPanicAlertsDictionary } from './reducers/deviceDataDuck';
 import subscriptionsReducer from './reducers/subscriptionsDuck';
 import notificationsReducer, { restoreViewedNotificationsAction } from './reducers/notificationsDuck';
 
@@ -33,6 +33,7 @@ const generateStore = () => {
     restoreSessionAction()(store.dispatch, store.getState, undefined);
     restoreThemeAction()(store.dispatch, store.getState, null);
     restoreViewedNotificationsAction()(store.dispatch, store.getState, null);
+    restoreAttendedPanicAlertsDictionary()(store.dispatch, store.getState, null);
     return store;
 }
 

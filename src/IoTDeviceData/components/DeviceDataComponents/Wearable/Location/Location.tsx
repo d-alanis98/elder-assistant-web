@@ -48,20 +48,26 @@ export default React.memo(Location);
 
 //Internal components
 interface LocationMapProps {
+    mapWidth?: number | string;
+    mapHeight?: number | string;
     eventData: LocationData;
 }
 
-const LocationMap: React.FC<LocationMapProps> = ({
+export const LocationMap: React.FC<LocationMapProps> = ({
+    mapWidth,
+    mapHeight,
     eventData: { lat, lon: lng }
 }) => (
     <Map 
         zoom = { 15 }
         center = {{ lat, lng }}
         marker = {{ lat, lng }}
+        mapWidth = { mapWidth }
+        mapHeight = { mapHeight }
     />
 );
 
-interface LocationData {
+export interface LocationData {
     lat: number;
     lon: number;
 }

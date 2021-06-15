@@ -12,30 +12,34 @@ import { ThunkAppAction } from '../store';
 
 /**
  * @author Damián Alanís Ramírez
- * @version 1.4.2
+ * @version 1.6.2
  * @description Specification of the device data reducer, containing action types, the reducer itself and the action functions.
  */
 
 /**
  * Constants
  */
-const GET_DEVICE_DATA                   = 'GET_DEVICE_DATA';
-const GET_DEVICE_DATA_ERROR             = 'GET_DEVICE_DATA_ERROR';
-const GET_DEVICE_DATA_SUCCESS           = 'GET_DEVICE_DATA_SUCCESS';
-const GET_DEVICE_DATA_HISTORY_SUCCESS   = 'GET_DEVICE_DATA_HISTORY_SUCCESS';
-
+const GET_DEVICE_DATA                    = 'GET_DEVICE_DATA';
+const GET_DEVICE_DATA_ERROR              = 'GET_DEVICE_DATA_ERROR';
+const GET_DEVICE_DATA_SUCCESS            = 'GET_DEVICE_DATA_SUCCESS';
+const GET_DEVICE_DATA_HISTORY_SUCCESS    = 'GET_DEVICE_DATA_HISTORY_SUCCESS';
+const SET_VIEWED_PANIC_ALERTS_DICTIONARY = 'SET_VIEWED_PANIC_ALERTS_DICTIONARY';
+//Others
+const PANIC_ALERTS_DICTIONARY = 'PANIC_ALERTS_DICTIONARY';
 //State shape
 interface DeviceDataState {
     error?: string;
     fetching: boolean;
     lastData: LastDataDictionary;
-    historyData: HistoryDataDictionary
+    historyData: HistoryDataDictionary;
+    attendedPanicAlerts: PanicAlertsDictionary;
 }
 // Initial state
 const initialState: DeviceDataState = {	
     fetching: false,
     lastData: { },
     historyData: { },
+    attendedPanicAlerts: { },
 };
 
 /**
@@ -72,6 +76,11 @@ const reducer = (state = initialState, action: AnyAction): DeviceDataState => {
                 error: undefined,
                 fetching: false,
                 historyData: payload,
+            }
+        case SET_VIEWED_PANIC_ALERTS_DICTIONARY:
+            return {
+                ...state,
+                attendedPanicAlerts: payload,
             }
         default:
             return state;
@@ -159,6 +168,43 @@ export let updateLastDeviceDataAction = (deviceData: IoTDeviceDataPrimitives): T
         type: GET_DEVICE_DATA_SUCCESS,
         payload: deviceLastData
     });
+    //We set the updated panic alerts dictionary
+    dispatch({
+        type: SET_VIEWED_PANIC_ALERTS_DICTIONARY,
+        payload: getDictionaryWithAddedPanicAlert(
+            deviceData,
+            getState().deviceData.attendedPanicAlerts
+        )
+    });
+}
+
+/**
+ * Action to set a Panic alert as viewed.
+ * @param alertId Id of the devie data record (Panic alert).
+ * @returns 
+ */
+export const setPanicAlertAsAttendedAction = (
+    alertId: string
+): ThunkAppAction => (dispatch, getState) => {
+    dispatch({
+        type: SET_VIEWED_PANIC_ALERTS_DICTIONARY,
+        payload: getUpdatedPanicAlertsDictionary(
+            alertId,
+            true,
+            getState().deviceData.attendedPanicAlerts
+        )
+    });
+}
+
+/**
+ * Action to retrieve the attended panic alerts dictionary from the local storage.
+ * @returns 
+ */
+export const restoreAttendedPanicAlertsDictionary = (): ThunkAppAction => (dispatch, _) => {
+    dispatch({
+        type: SET_VIEWED_PANIC_ALERTS_DICTIONARY,
+        payload: retrievePanicAlertsDictionary()
+    });
 }
 
 
@@ -217,6 +263,13 @@ const getDeviceLastDataDictionary = (
     return deviceLastData;
 }
 
+
+/**
+ * Function to get the updated last data dictionary.
+ * @param deviceId Id of the device.
+ * @param deviceData Device data.
+ * @param deviceLastData Existing device data.
+ */
 const updateLastDataDictionaryEntry = (
     deviceId: string,
     deviceData: IoTDeviceDataPrimitives,
@@ -229,6 +282,66 @@ const updateLastDataDictionaryEntry = (
     deviceLastData[deviceId][deviceData.key] = deviceData;
 }
 
+/**
+ * Function to get the dictionary with a new panic alert, with status of non-viewed, so
+ * we can display it as a banner.
+ * @param {IoTDeviceDataPrimitives} deviceData IoT device data record.
+ * @param {PanicAlertsDictionary} existingPanicAlerts Existing panic alerts dictionary.
+ * @returns 
+ */
+const getDictionaryWithAddedPanicAlert = (
+    deviceData: IoTDeviceDataPrimitives,
+    existingPanicAlerts: PanicAlertsDictionary
+): PanicAlertsDictionary => {
+    if(deviceData.key !== 'PanicAlert')
+        return existingPanicAlerts;
+    const alertId = deviceData._id;
+    return getUpdatedPanicAlertsDictionary(
+        alertId,
+        false,
+        existingPanicAlerts
+    );
+}
+
+/**
+ * Fucntion to get the panic alerts dictionary with an updated entry.
+ * @param {string} alertId Id of the alert.
+ * @param {boolean} viewed View status.
+ * @param {PanicAlertsDictionary}existingPanicAlerts Existing panic alerts dictionary. 
+ * @returns 
+ */
+const getUpdatedPanicAlertsDictionary = (
+    alertId: string,
+    viewed: boolean,
+    existingPanicAlerts: PanicAlertsDictionary
+): PanicAlertsDictionary => {
+    //We create the empty object for the device id key if it does not exist
+    existingPanicAlerts[alertId] = viewed;
+    //We persist the updated panic alerts dictionary
+    persistPanicAlertsDictionary(existingPanicAlerts);
+    //We return the updated dictionary
+    return existingPanicAlerts;
+}
+
+/**
+ * Function to retrieve the panic alerts dictionary from the local storage.
+ * @returns {PanicAlertsDictionary}
+ */
+const retrievePanicAlertsDictionary = () => {
+    const panicAlertsDictionary = localStorage.getItem(PANIC_ALERTS_DICTIONARY);
+    return panicAlertsDictionary 
+        ? JSON.parse(panicAlertsDictionary)
+        : {};
+}
+
+/**
+ * Funciton to persist the panic alerts dictionary to the local storage.
+ * @param {PanicAlertsDictionary} panicAlertsDictionary Alerts dictionary.
+ */
+const persistPanicAlertsDictionary = (panicAlertsDictionary: PanicAlertsDictionary) => {
+    localStorage.setItem(PANIC_ALERTS_DICTIONARY, JSON.stringify(panicAlertsDictionary));
+}
+
 //Types
 type LastDataDictionary = { 
     [deviceId: string]: LastEventData,
@@ -238,6 +351,10 @@ type HistoryDataDictionary = {
         [eventKey: string]: IoTDevicePrimitives[] 
     }
 };
+
+interface PanicAlertsDictionary {
+    [panicAlertId: string]: boolean;
+}
 
 export type LastEventData = {
     [eventKey: string]: IoTDeviceDataPrimitives

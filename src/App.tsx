@@ -47,7 +47,7 @@ const App: React.FC = () => {
     //We register the main services (mainly related to WebSockets messages)
     useRegisterServices();
     useNotificationServices();
-    
+
     //Render
     return (
         <ThemeProvider

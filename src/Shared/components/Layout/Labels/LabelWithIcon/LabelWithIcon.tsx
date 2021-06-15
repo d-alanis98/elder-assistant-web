@@ -35,6 +35,7 @@ const LabelWithIcon: React.FC<LabelWithIconProps> = ({
             color = { color }
             style = { style }
             fontSize = { fontSize }
+            className = { className }
         >
             { text || children }    
         </Label>

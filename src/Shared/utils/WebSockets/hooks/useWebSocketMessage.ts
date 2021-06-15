@@ -14,15 +14,26 @@ const useWebSocketMessage = (
     const webSocket = useContext(WebSocketsContext);
     //Callbacks
     useEffect(() => {
-        if(!webSocket || !webSocket.instance || !messageType)
-            return;
-        webSocket.instance.onmessage = ({ data }) => {
-            const parsedMessage: WebSocketMessage = JSON.parse(data);
-            if(parsedMessage.type !== messageType)
+        //Event listener
+        (async function() {
+            //Validations
+            if(!webSocket)
                 return;
-            //We validate the message type
-            onMessage(parsedMessage.payload);
-        }
+            if(!webSocket.isWebSocketOpen())
+                await webSocket.connectingWebSocket();
+            if(!webSocket.instance)
+                return
+            //Handler
+            webSocket.instance.onmessage = ({ 
+                data 
+            }) => {
+                const parsedMessage: WebSocketMessage = JSON.parse(data);
+                if(parsedMessage.type !== messageType)
+                    return;
+                //We validate the message type
+                onMessage(parsedMessage.payload);
+            };
+        })()
     }, [
         webSocket,
         onMessage,

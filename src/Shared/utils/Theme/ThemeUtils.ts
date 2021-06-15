@@ -1,10 +1,10 @@
 //Theme
-import { isDarkTheme } from '../../components/Theme/constants/theme';
+import { darkTheme, isDarkTheme } from '../../components/Theme/constants/theme';
 import { ThemeParameters } from '../../components/Theme/constants/ThemeParameters';
 
 /**
  * @author Damián Alanís Ramírez
- * @version 1.2.1
+ * @version 1.3.1
  * @description Theme utils class.
  */
 export default class ThemeUtils {
@@ -56,5 +56,12 @@ export default class ThemeUtils {
             `rgba(0,0,0,${ darkOpacity || ThemeUtils.DEFAULT_OPACITY })`
         )
     );
+
+    /**
+     * Method to detemrine if the dark mode is currently applied.
+     * @param {ThemeParameters} theme Current theme.
+     * @returns 
+     */
+    static isDarkMode = (theme: ThemeParameters) => theme.backgroundColor === darkTheme.backgroundColor;
     
 }
