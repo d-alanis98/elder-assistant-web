@@ -6,7 +6,7 @@ import JWTManager from '../../Security/JWTManager';
 
 /**
  * @author Damian Alanis Ramirez
- * @version 1.1.1
+ * @version 2.2.3
  * @description Web sockets helper class.
  */
 export default class WebSocketManager {
@@ -14,6 +14,7 @@ export default class WebSocketManager {
     private readonly RETRY_TIME = 500;
     //Properties
     private webSocket: Nullable<WebSocket>;
+    private messageHandler: MessageHandler = (_) => { };
     private retryOperations: Boolean = true;
 
     constructor() {
@@ -47,7 +48,15 @@ export default class WebSocketManager {
         if(!this.webSocket)
             return reject('WebSocket not created');
         this.webSocket.onopen = () => {
-            console.debug('WS connected')
+            if(!this.webSocket)
+                return reject('WebSocket not created');
+            //We add the message handler
+            this.webSocket.onmessage = ev => {
+                this.messageHandler(ev);
+            }
+            //We log the success result
+            console.debug('WS connected');
+            console.debug('Message handler set');
             resolve();
         }
         this.webSocket.onerror = this.webSocket.onclose = () => {
@@ -117,5 +126,12 @@ export default class WebSocketManager {
         console.error('Connection error, retrying connection');
     }
 
+    onWebSocketMessage = (handler: MessageHandler) => {
+        this.messageHandler = handler;
+    }
+
 
 }
+
+//Types
+type MessageHandler = ({ data }: MessageEvent) => void | Promise<void>;

@@ -1,5 +1,5 @@
 import React from 'react';
-import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api';
+import { GoogleMap, Marker } from '@react-google-maps/api';
 
 interface MapProps {
     zoom?: number;
@@ -15,35 +15,27 @@ const Map: React.FC<MapProps> = ({
     marker,
     mapWidth,
     mapHeight
-}) => (
-    <LoadScript
-        googleMapsApiKey = { process.env.REACT_APP_GOOGLE_MAPS_KEY || '' }
-    >
-        {
-            React.useMemo(() => (
-                <GoogleMap
-                    zoom = { zoom }
-                    center = { center }
-                    mapContainerStyle = {{
-                        ...containerStyle,
-                        width: mapWidth || containerStyle.width,
-                        height: mapHeight || containerStyle.height 
-                    }}
-                >
-                    <Marker 
-                        position = { marker }
-                    />
-                </GoogleMap>
-            ), [
-                zoom,
-                center,
-                marker,
-                mapWidth,
-                mapHeight
-            ])
-        }
-    </LoadScript>
-);
+}) => React.useMemo(() => (
+        <GoogleMap
+            zoom = { zoom }
+            center = { center }
+            mapContainerStyle = {{
+                ...containerStyle,
+                width: mapWidth || containerStyle.width,
+                height: mapHeight || containerStyle.height 
+            }}
+        >
+            <Marker 
+                position = { marker }
+            />
+        </GoogleMap>
+    ), [
+    zoom,
+    center,
+    marker,
+    mapWidth,
+    mapHeight
+]);
 
 
 export default React.memo(Map);

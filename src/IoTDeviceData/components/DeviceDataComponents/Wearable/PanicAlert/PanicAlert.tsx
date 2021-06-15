@@ -1,10 +1,7 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 //Components
 import LastUpdate from '../../../../../Shared/components/LastUpdate/LastUpdate';
-import { 
-    LocationMap,
-    LocationData 
-} from '../Location/Location';
+import { LocationMap } from '../Location/Location';
 import SecondaryUserProtected from '../../../../../Shared/components/Screens/SecondaryUserProtected';
 //Styled components
 import { 
@@ -19,10 +16,11 @@ import usePanicAlerts from '../../../../../Shared/store/hooks/deviceData/usePani
 import DeviceDataWidget, { BaseWidgetProps } from '../../../DeviceDataWidget/DeviceDataWidget';
 //Icons
 import { faExclamationCircle } from '@fortawesome/free-solid-svg-icons';
+import { IoTDeviceDataPrimitives } from '../../../../domain/IoTDeviceData';
 
 
 interface PanicAlertProps extends BaseWidgetProps {
-    eventData: PanicAlertData;
+    eventData: string;
 }
 
 const PanicAlert: React.FC<PanicAlertProps> = ({
@@ -53,26 +51,37 @@ const PanicAlertRenderer: React.FC<PanicAlertProps> = ({
     event,
     eventData
 }) => {
-    //Props
-    const { location } = eventData;
     /**
      * Hooks
      */
+    //Panic alerts
      const { 
         isAlertAttended, 
         setPanicAlertAsAttended 
     } = usePanicAlerts();
 
+    //Callbacks
+    const getLocation = useCallback(() => {
+        //We parse the location from the eventData string
+        const { location } = JSON.parse(eventData);
+        return location;
+    }, [eventData]);
+    
+
+
     if(isAlertAttended(event._id))
         return <AttendedAlert />;
     return (
         <>
+            <AudioFile 
+                event = { event }
+            />
             <PanicAlertEmphasisText>
                 Ubicación: 
             </PanicAlertEmphasisText>
             <LocationMap 
                 mapHeight = { 200 }
-                eventData = { location }
+                eventData = { getLocation() }
             />
             <SecondaryUserProtected>
                 <AttendPanicAlertButton
@@ -93,11 +102,26 @@ const AttendedAlert: React.FC = () => (
             Alerta atendida
         </PanicAlertEmphasisText>
     </PanicAlertAttendedContainer>
-)
+);
 
 
-//Types
-interface PanicAlertData {
-    location: LocationData;
-    audioUri?: string;
+interface AudioFileProps {
+    event: IoTDeviceDataPrimitives;
 }
+const AudioFile: React.FC<AudioFileProps> = ({
+    event
+}) => event.filePath
+    ? (
+        <>
+            <PanicAlertEmphasisText>
+                Audio de emergencia:
+            </PanicAlertEmphasisText>
+            <audio
+                src = { `${ process.env.REACT_APP_SERVER_URL }/PanicAlerts/${ event.filePath }` }
+                controls
+            >
+                Audio not supported
+            </audio>
+        </>
+    )
+    : null;

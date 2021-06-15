@@ -15,25 +15,15 @@ const useWebSocketMessage = (
     //Callbacks
     useEffect(() => {
         //Event listener
-        (async function() {
-            //Validations
-            if(!webSocket)
+        webSocket?.onWebSocketMessage(({ 
+            data 
+        }) => {
+            const parsedMessage: WebSocketMessage = JSON.parse(data);
+            if(parsedMessage.type !== messageType)
                 return;
-            if(!webSocket.isWebSocketOpen())
-                await webSocket.connectingWebSocket();
-            if(!webSocket.instance)
-                return
-            //Handler
-            webSocket.instance.onmessage = ({ 
-                data 
-            }) => {
-                const parsedMessage: WebSocketMessage = JSON.parse(data);
-                if(parsedMessage.type !== messageType)
-                    return;
-                //We validate the message type
-                onMessage(parsedMessage.payload);
-            };
-        })()
+            //We validate the message type
+            onMessage(parsedMessage.payload);
+        });
     }, [
         webSocket,
         onMessage,

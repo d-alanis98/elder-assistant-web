@@ -10,6 +10,7 @@ export const LastLocationLabelContainer = styled.div`
     justify-content: flex-start;
     padding: 10px;
     opacity: 0.8;
+    margin-top: auto;
 `;
 
 export const LastLocationLabel = styled(Label)`

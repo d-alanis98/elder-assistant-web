@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import { LoadScript } from '@react-google-maps/api';
 //Components
 import EmptyData from '../../../Shared/components/Miscelaneous/EmptyData/EmptyData';
 import LoadingText from '../../../Shared/components/Loaders/LoadingText';
@@ -55,7 +56,9 @@ const DeviceDataRenderer: React.FC<DeviceDataRendererProps> = ({
 
     //Render
     return (
-        <>
+        <LoadScript
+            googleMapsApiKey = { process.env.REACT_APP_GOOGLE_MAPS_KEY || '' }
+        >
             {
                 devices.map(device => (
                     <WidgetDataRenderer 
@@ -64,7 +67,7 @@ const DeviceDataRenderer: React.FC<DeviceDataRendererProps> = ({
                     />
                 ))
             }
-        </>
+        </LoadScript>
     );
 }
 
