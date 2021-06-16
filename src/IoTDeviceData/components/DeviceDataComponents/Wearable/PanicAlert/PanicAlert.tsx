@@ -30,7 +30,7 @@ const PanicAlert: React.FC<PanicAlertProps> = ({
 }) => (
     <DeviceDataWidget
         icon = { faExclamationCircle }
-        widgetTitle = 'Alerta de panico'
+        widgetTitle = 'Alerta de pánico'
     >
         <PanicAlertRenderer 
             key = { event._id }
@@ -77,7 +77,7 @@ const PanicAlertRenderer: React.FC<PanicAlertProps> = ({
                 event = { event }
             />
             <PanicAlertEmphasisText>
-                Ubicación: 
+                Ubicación de la alerta: 
             </PanicAlertEmphasisText>
             <LocationMap 
                 mapHeight = { 200 }
