@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 //Components
 import EmptyData from '../../../Shared/components/Miscelaneous/EmptyData/EmptyData';
 import DeviceIcon from '../DeviceIcon/DeviceIcon';
@@ -9,6 +9,7 @@ import { DeviceName, DeviceRefreshButton, DeviceSettings, DevicesListContainer, 
 import useDevices from '../../../Shared/store/hooks/devices/useDevices';
 //Helpers
 import ObjectHelper from '../../../Shared/utils/Miscelaneous/ObjectHelper';
+import { useHistory } from 'react-router-dom';
 
 
 interface DevicesListProps {
@@ -22,8 +23,17 @@ const DevicesList: React.FC<DevicesListProps> = ({
     /**
      * Hooks
      */
+    //History
+    const history = useHistory();
     //Devices
     const { devices, fetching, getDevices } = useDevices();
+
+    //Callbacks
+    const redirectToConfiguration = useCallback((deviceId: string) => {
+        history.push(`/devices/${ deviceId }`);
+    }, [
+        history
+    ])
 
     if(fetching && ObjectHelper.isEmpty(devices))
         return <LoadingText 
@@ -45,6 +55,7 @@ const DevicesList: React.FC<DevicesListProps> = ({
                 devices.map(({ _id, name, type }) => (
                     <DevicesListItem
                         key = { _id }
+                        onClick = { _ => redirectToConfiguration(_id) }
                     >
                         <DeviceIcon 
                             deviceType = { type }

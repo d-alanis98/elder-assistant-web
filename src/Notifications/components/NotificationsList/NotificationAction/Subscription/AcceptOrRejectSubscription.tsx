@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo } from 'react';
+import React, { useCallback } from 'react';
 //Domain
 import { SubscriptionPrimitives, SubscriptionValidStatus } from '../../../../../Subscription/domain/Subscription';
 //Components
@@ -21,15 +21,13 @@ const AcceptOrRejectSubscription: React.FC<SubscriptionProps> = ({
      */
     //Subscriptions
     const { 
-        subscriptions, 
         acceptOrRejectSubscription 
     } = useSubscriptions();
     //Callbacks
     const isPending = useCallback(() => (
-        subscriptions[subscription.from]?.status === SubscriptionValidStatus.PENDING
+        subscription.status === SubscriptionValidStatus.PENDING
     ), [
-        subscription,
-        subscriptions
+        subscription
     ]);
 
     const updateSubscription = useCallback((status: SubscriptionValidStatus) => {
@@ -42,7 +40,7 @@ const AcceptOrRejectSubscription: React.FC<SubscriptionProps> = ({
         acceptOrRejectSubscription
     ]);
 
-    return useMemo(() => (
+    return (
         <ConditionalRendering
             condition = { isPending() }
         >
@@ -56,10 +54,7 @@ const AcceptOrRejectSubscription: React.FC<SubscriptionProps> = ({
                 />
             </PrimaryUserProtected>
         </ConditionalRendering>
-    ), [
-        isPending,
-        updateSubscription
-    ]);
+    );
 }
 
 export default AcceptOrRejectSubscription;

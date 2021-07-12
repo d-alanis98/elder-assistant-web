@@ -5,11 +5,11 @@ import { ThunkAppAction } from '../store';
 import { ValidUserTypes } from '../../../User/domain/User';
 import { IoTDevicePrimitives } from '../../../IoTDevice/domain/IoTDevice';
 //API
-import { getDevicesData, getUserDevices, linkIoTDevice } from '../../../IoTDevice/infrastructure/api/devicesApi';
+import { getDevicesData, getUserDevices, linkIoTDevice, updateDeviceData, UpdateDeviceDataParams } from '../../../IoTDevice/infrastructure/api/devicesApi';
 
 /**
  * @author Damián Alanís Ramírez
- * @version 3.3.1
+ * @version 3.4.1
  * @description Specification of the devices reducer, containing action types, the reducer itself and the action functions.
  */
 
@@ -224,6 +224,38 @@ export const linkIoTDeviceAction = (
         });
         //We return the device data
         return linkedDevice;
+    } catch(error) {
+        dispatch({
+            type: GET_DEVICES_ERROR,
+            payload: error.message
+        });
+        return Promise.reject(error);
+    }
+}
+
+export const updateDeviceDataAction = ({
+    name,
+    deviceId,
+    configuration
+}: UpdateDeviceDataParams): ThunkAppAction<Promise<void>> => async (dispatch, getState) => {
+    try {
+        const updatedDevice = await updateDeviceData({
+            name,
+            deviceId,
+            configuration
+        });
+        //We get the updated devices array
+        const { devices } = getState().devices;
+        const updatedDevices = devices.map(device => ( 
+            device._id !== deviceId
+                ? device
+                : updatedDevice
+        ));
+        //We dispatch the new devices array
+        dispatch({
+            type: GET_DEVICES_SUCCESS,
+            payload: updatedDevices
+        });
     } catch(error) {
         dispatch({
             type: GET_DEVICES_ERROR,

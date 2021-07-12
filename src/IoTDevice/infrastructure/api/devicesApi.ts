@@ -34,6 +34,31 @@ export const getUserDevices = async (userId: string): Promise<IoTDevicePrimitive
     return response.data;
 }
 
+export interface UpdateDeviceDataParams {
+    name?: string;
+    deviceId: string;
+    configuration?: any;
+}
+
+export const updateDeviceData = async ({
+    name,
+    deviceId,
+    configuration
+}: UpdateDeviceDataParams): Promise<IoTDevicePrimitives> => {
+    try {
+        const response = await AxiosRequest.put(
+            `/iot/device/${ deviceId }`,
+            { 
+                name,
+                configuration
+            }
+        );
+        return response.data;
+    } catch(error) {
+        return Promise.reject(error.message);
+    }
+}
+
 
 
 

@@ -31,7 +31,9 @@ const HeaderActions: React.FC = () => {
 
     
     const isActive = useCallback((screen: string): Boolean => (
-        screen === currentScreen
+        screen === '/'
+            ? currentScreen === screen
+            : currentScreen.includes(screen)
     ), [currentScreen])
 
     return (

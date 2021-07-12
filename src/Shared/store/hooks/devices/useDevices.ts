@@ -12,8 +12,10 @@ import {
     getDevicesAction, 
     linkIoTDeviceAction, 
     getDevicesWithLoaderAction,
-    getUserDevicesAction, 
+    getUserDevicesAction,
+    updateDeviceDataAction, 
 } from '../../reducers/devicesDuck';
+import { UpdateDeviceDataParams } from '../../../../IoTDevice/infrastructure/api/devicesApi';
 
 /**
  * Custom hook to get the user devices in the application.
@@ -56,13 +58,27 @@ const useDevices = () => {
         await dispatch(linkIoTDeviceAction(deviceId))
     ), [dispatch]);
 
+    const getDeviceDataById = useCallback((deviceId: string) => (
+        devices.find(device => device._id === deviceId)
+    ), [devices]);
+
+    const updateDeviceData = useCallback(({
+        name,
+        deviceId,
+        configuration
+    }: UpdateDeviceDataParams) => (
+        dispatch(updateDeviceDataAction({ name, deviceId, configuration }))
+    ), [dispatch]);
+
     return { 
         devices: devices as IoTDevicePrimitives[], 
         fetching,
         getDevices,
         linkDevice,
         devicesByUser,
-        getUserDevices
+        getUserDevices,
+        updateDeviceData,
+        getDeviceDataById
     };
 }
 

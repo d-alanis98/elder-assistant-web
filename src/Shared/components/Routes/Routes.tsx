@@ -19,6 +19,7 @@ import SearchUsersScreen from '../../../Subscription/components/SearchUsers/Sear
 import NotificationsScreen from '../../../Notifications/components/NotificationsScreen/NotificationsScreen';
 //Hooks
 import { useAppSelector } from '../../store/hooks';
+import ConfigureDevice from '../../../IoTDevice/components/ConfigureDevice/ConfigureDevice';
 
 
 const Routes: React.FC = () => {
@@ -69,6 +70,12 @@ const Routes: React.FC = () => {
                     exact
                     loggedIn = { loggedIn }
                     component = { IoTDeviceScreen }
+                />
+                <ProtectedRoute 
+                    path = '/devices/:deviceId'
+                    exact
+                    loggedIn = { loggedIn }
+                    component = { ConfigureDevice }
                 />
                 <ProtectedRoute 
                     path = '/users'

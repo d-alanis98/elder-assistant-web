@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 //Components
 import Pillbox from '../Pillbox/Pillbox';
+import LastUpdate from '../../../../../Shared/components/LastUpdate/LastUpdate';
 import DeviceDataWidget, { BaseWidgetProps } from '../../../DeviceDataWidget/DeviceDataWidget';
 //Styled components
 import { CurrentDosisCompleteButton, CurrentDosisContainer, CurrentDosisLabel, NextDosisContainer, NextDosisLabel, NextDosisRow, NextDosisTimeLabel } from './CurrentDosis.styles';
@@ -19,7 +20,7 @@ export enum CurrentDosisStatus {
 };
 
 const CurrentDosis: React.FC<CurrentDosisProps> = ({ 
-    device,
+    event,
     eventData: currentDosis,
 }) => {
     /**
@@ -32,15 +33,16 @@ const CurrentDosis: React.FC<CurrentDosisProps> = ({
         //Validation
         if(!currentDosis || !currentDosis.schedule || !(currentDosis.schedule instanceof Object))
             return;
+        const numericSection = Number(currentDosis.section);
         //Definitions
         const getSchedule = () => {
-            return currentDosis.schedule[currentDosis.section];
+            return currentDosis.schedule[numericSection - 1];
         }
 
         const getNextSections = () => (
             Object.entries(currentDosis.schedule)
                 .filter(([sectionKey]) => (
-                    sectionKey > currentDosis.section
+                    Number(sectionKey) > numericSection - 1
                 ))
         );
 
@@ -61,9 +63,10 @@ const CurrentDosis: React.FC<CurrentDosisProps> = ({
             const [[nextSectionKey, nextSectionHour]] = sections;
             setNextSection({
                 hour: nextSectionHour,
-                section: getSectionLabel(nextSectionKey)
+                section: getSectionLabel(`Section_${ Number(nextSectionKey) + 1 }`)
             });
         }
+
 
         //Execution
         setNextSectionData();
@@ -74,12 +77,12 @@ const CurrentDosis: React.FC<CurrentDosisProps> = ({
     return (
         <DeviceDataWidget 
             icon = { faClock }
-            widgetTitle = { device.name }
+            widgetTitle = 'Pastillero'
         >
             <CurrentDosisContainer>
                 <CurrentDosisLabel>Dosis actual</CurrentDosisLabel>
                 <Pillbox 
-                    activeSection = { currentDosis.section }
+                    activeSection = { `Section_${ currentDosis.section }` }
                 />
             </CurrentDosisContainer>
             {
@@ -97,6 +100,9 @@ const CurrentDosis: React.FC<CurrentDosisProps> = ({
                     <NextDosisTimeLabel>{ nextSection?.section }</NextDosisTimeLabel>
                 </NextDosisRow>
             </NextDosisContainer>
+            <LastUpdate 
+                issueDate = { event.issuedAt }
+            />
         </DeviceDataWidget>
     );
 }
